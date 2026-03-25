@@ -1,0 +1,161 @@
+{
+  "description": "Tel Aviv Metropolitan Area Mass Transit Plan 2050",
+  "lines": [
+    {
+      "name": "קו חום",
+      "type": "BRT",
+      "targetYear": 2026,
+      "lineId": 70
+    },
+    {
+      "name": "קו אדום",
+      "type": "LRT",
+      "targetYear": 2022,
+      "lineId": 10
+    },
+    {
+      "name": "קו סגול",
+      "type": "LRT",
+      "targetYear": 2027,
+      "lineId": 13
+    },
+    {
+      "name": "M3 Center",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 5
+    },
+    {
+      "name": "M1-M3 Connect",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 5
+    },
+    {
+      "name": "M1 Kfar Sava",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 4
+    },
+    {
+      "name": "M3",
+      "type": "Metro",
+      "targetYear": 2040,
+      "lineId": 3
+    },
+    {
+      "name": "קו ירוק",
+      "type": "LRT",
+      "targetYear": 2028,
+      "lineId": 12
+    },
+    {
+      "name": "M1 North-E",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 5
+    },
+    {
+      "name": "M3 North",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 3
+    },
+    {
+      "name": "M2_Extension",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 2
+    },
+    {
+      "name": "M2",
+      "type": "Metro",
+      "targetYear": 2030,
+      "lineId": 2
+    },
+    {
+      "name": "Shoham-Or_Yehuda",
+      "type": "LRT",
+      "targetYear": 2050,
+      "lineId": 18
+    },
+    {
+      "name": "M1_West",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 1
+    },
+    {
+      "name": "Kfar_Sava-Herzelia",
+      "type": "LRT",
+      "targetYear": 2050,
+      "lineId": 17
+    },
+    {
+      "name": "Brown_West",
+      "type": "LRT",
+      "targetYear": 2050,
+      "lineId": 14
+    },
+    {
+      "name": "קו כחול",
+      "type": "BRT",
+      "targetYear": 2026,
+      "lineId": 42
+    },
+    {
+      "name": "קו חום - זמני",
+      "type": "BRT",
+      "targetYear": 2026,
+      "lineId": 70
+    },
+    {
+      "name": "כביש 4",
+      "type": "LRT",
+      "targetYear": 2040,
+      "lineId": 104
+    },
+    {
+      "name": "Yellow",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 4
+    },
+    {
+      "name": "M1 Lod",
+      "type": "Metro",
+      "targetYear": 2050,
+      "lineId": 4
+    },
+    {
+      "name": "קו חום - הארכה אירפורט סיטי",
+      "type": "BRT",
+      "targetYear": 2030,
+      "lineId": 70
+    },
+    {
+      "name": "Elad-Bnei_Brak",
+      "type": "LRT",
+      "targetYear": 2050,
+      "lineId": 16
+    },
+    {
+      "name": "Airport",
+      "type": "LRT",
+      "targetYear": 2040,
+      "lineId": 20
+    },
+    {
+      "name": "Rosh_Haain-Ramat_Gan",
+      "type": "BRT",
+      "targetYear": 2050,
+      "lineId": 15
+    },
+    {
+      "name": "Ariel",
+      "type": "BRT",
+      "targetYear": 2050,
+      "lineId": 19
+    }
+  ]
+}

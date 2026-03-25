@@ -1,0 +1,79 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "assistant-ui" [ref=e11] [cursor=pointer]:
+            - /url: https://assistant-ui.com
+            - img [ref=e13]
+            - generic [ref=e17]: assistant-ui
+      - generic [ref=e19]:
+        - button "New Thread" [ref=e20]:
+          - img
+          - text: New Thread
+        - generic [ref=e74]:
+          - button "New Chat" [ref=e75]
+          - button "Archive thread" [ref=e76]:
+            - img
+            - generic [ref=e77]: Archive thread
+      - button "Toggle Sidebar" [ref=e21]
+      - list [ref=e23]:
+        - listitem [ref=e24]:
+          - link "GitHub View Source" [ref=e25] [cursor=pointer]:
+            - /url: https://github.com/assistant-ui/assistant-ui
+            - img [ref=e27]
+            - generic [ref=e30]:
+              - generic [ref=e31]: GitHub
+              - generic [ref=e32]: View Source
+    - main [ref=e33]:
+      - generic [ref=e34]:
+        - button "Toggle Sidebar" [ref=e35]:
+          - img
+          - generic [ref=e36]: Toggle Sidebar
+        - navigation "breadcrumb" [ref=e37]:
+          - list [ref=e38]:
+            - listitem [ref=e39]:
+              - link "Dirot - Pinui Binui Analyst" [disabled] [ref=e40]
+      - generic [ref=e43]:
+        - paragraph [ref=e81]: תראה לי פרויקטי פינוי בינוי בבת ים
+        - generic [ref=e83]:
+          - generic [ref=e85]:
+            - img [ref=e86]
+            - paragraph [ref=e88]: "Used tool: searchPinuiBinui"
+            - button [ref=e89]:
+              - img
+          - generic [ref=e93]:
+            - paragraph [ref=e94]: אני מתנצל, אני חווה כרגע בעיה טכנית בגישה למאגר הנתונים של פרויקטי פינוי בינוי ולא יכול להציג את המידע המבוקש.
+            - paragraph [ref=e95]: אני ממליץ לנסות שוב בעוד זמן קצר.
+        - paragraph [ref=e105]: Show me all pinui binui projects in Bat Yam with their status
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e109]:
+              - img [ref=e110]
+              - paragraph [ref=e112]: "Used tool: searchPinuiBinui"
+              - button [ref=e113]:
+                - img
+            - generic [ref=e116]:
+              - paragraph [ref=e117]: I apologize, I'm currently experiencing a technical issue with accessing the Urban Renewal Projects database and cannot display the requested information.
+              - paragraph [ref=e118]: I recommend trying again in a little while.
+          - generic [ref=e120]:
+            - button "Copy" [ref=e121]:
+              - img
+              - generic [ref=e122]: Copy
+            - button "Refresh" [ref=e123]:
+              - img
+              - generic [ref=e124]: Refresh
+        - generic [ref=e59]:
+          - textbox "Message input" [active] [ref=e60]:
+            - /placeholder: Send a message...
+          - generic [ref=e61]:
+            - button "Add Attachment" [ref=e62]:
+              - img
+              - generic [ref=e63]: Add Attachment
+            - button "Send message" [disabled]:
+              - img
+              - generic: Send message
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e69] [cursor=pointer]:
+    - img [ref=e70]
+  - alert [ref=e73]

@@ -1,0 +1,337 @@
+{
+  "help": "https://data.gov.il/api/3/action/help_show?name=datastore_search",
+  "success": true,
+  "result": {
+    "include_total": true,
+    "limit": 500,
+    "records_format": "objects",
+    "resource_id": "bd11e899-65c0-43aa-8264-c07434da22aa",
+    "total_estimation_threshold": null,
+    "records": [
+      {
+        "_id": 1,
+        "OID": -1,
+        "NAME": "קו חום",
+        "LINE_ID": 70,
+        "TYPE": "BRT",
+        "YEAR": 2026,
+        "Shape_Length": 20383.780474844825
+      },
+      {
+        "_id": 2,
+        "OID": -1,
+        "NAME": "קו חום",
+        "LINE_ID": 70,
+        "TYPE": "BRT",
+        "YEAR": 2025,
+        "Shape_Length": 8906.223391235253
+      },
+      {
+        "_id": 3,
+        "OID": -1,
+        "NAME": "קו אדום",
+        "LINE_ID": 10,
+        "TYPE": "LRT",
+        "YEAR": 2022,
+        "Shape_Length": 23941.212623349224
+      },
+      {
+        "_id": 4,
+        "OID": -1,
+        "NAME": "קו סגול",
+        "LINE_ID": 13,
+        "TYPE": "LRT",
+        "YEAR": 2027,
+        "Shape_Length": 26315.418837546167
+      },
+      {
+        "_id": 5,
+        "OID": -1,
+        "NAME": "M3 Center",
+        "LINE_ID": 5,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 22561.930382828643
+      },
+      {
+        "_id": 6,
+        "OID": -1,
+        "NAME": "M1-M3 Connect",
+        "LINE_ID": 5,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 6414.732899068065
+      },
+      {
+        "_id": 7,
+        "OID": -1,
+        "NAME": "M1 Kfar Sava",
+        "LINE_ID": 4,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 6580.25164328149
+      },
+      {
+        "_id": 8,
+        "OID": -1,
+        "NAME": "M3",
+        "LINE_ID": 3,
+        "TYPE": "Metro",
+        "YEAR": 2040,
+        "Shape_Length": 13514.749319905917
+      },
+      {
+        "_id": 9,
+        "OID": -1,
+        "NAME": "קו ירוק",
+        "LINE_ID": 12,
+        "TYPE": "LRT",
+        "YEAR": 2028,
+        "Shape_Length": 36738.65533609516
+      },
+      {
+        "_id": 10,
+        "OID": -1,
+        "NAME": "M1 North-E",
+        "LINE_ID": 5,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 3610.424676653425
+      },
+      {
+        "_id": 11,
+        "OID": -1,
+        "NAME": "M3 North",
+        "LINE_ID": 3,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 11852.8104175197
+      },
+      {
+        "_id": 12,
+        "OID": -1,
+        "NAME": "M2_Extension",
+        "LINE_ID": 2,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 6920.011167645701
+      },
+      {
+        "_id": 13,
+        "OID": -1,
+        "NAME": "M2",
+        "LINE_ID": 2,
+        "TYPE": "Metro",
+        "YEAR": 2030,
+        "Shape_Length": 24025.38231709187
+      },
+      {
+        "_id": 14,
+        "OID": -1,
+        "NAME": "Shoham-Or_Yehuda",
+        "LINE_ID": 18,
+        "TYPE": "LRT",
+        "YEAR": 2050,
+        "Shape_Length": 8587.722292640083
+      },
+      {
+        "_id": 15,
+        "OID": -1,
+        "NAME": "M1_West",
+        "LINE_ID": 1,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 54848.977402936136
+      },
+      {
+        "_id": 16,
+        "OID": -1,
+        "NAME": "M3",
+        "LINE_ID": 3,
+        "TYPE": "Metro",
+        "YEAR": 2030,
+        "Shape_Length": 21973.55558676076
+      },
+      {
+        "_id": 17,
+        "OID": -1,
+        "NAME": "Kfar_Sava-Herzelia",
+        "LINE_ID": 17,
+        "TYPE": "LRT",
+        "YEAR": 2050,
+        "Shape_Length": 20809.243140278482
+      },
+      {
+        "_id": 18,
+        "OID": -1,
+        "NAME": "Brown_West",
+        "LINE_ID": 14,
+        "TYPE": "LRT",
+        "YEAR": 2050,
+        "Shape_Length": 16220.592288665983
+      },
+      {
+        "_id": 19,
+        "OID": -1,
+        "NAME": "קו כחול",
+        "LINE_ID": 42,
+        "TYPE": "BRT",
+        "YEAR": 2026,
+        "Shape_Length": 23797.7909284329
+      },
+      {
+        "_id": 20,
+        "OID": -1,
+        "NAME": "קו חום - זמני",
+        "LINE_ID": 70,
+        "TYPE": "BRT",
+        "YEAR": 2026,
+        "Shape_Length": 5480.372951267057
+      },
+      {
+        "_id": 21,
+        "OID": -1,
+        "NAME": "קו חום - זמני",
+        "LINE_ID": 70,
+        "TYPE": "BRT",
+        "YEAR": 2025,
+        "Shape_Length": 2944.0133205660695
+      },
+      {
+        "_id": 22,
+        "OID": -1,
+        "NAME": "כביש 4",
+        "LINE_ID": 104,
+        "TYPE": "LRT",
+        "YEAR": 2040,
+        "Shape_Length": 80011.21921088002
+      },
+      {
+        "_id": 23,
+        "OID": -1,
+        "NAME": "Yellow",
+        "LINE_ID": 4,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 17186.58330202386
+      },
+      {
+        "_id": 24,
+        "OID": -1,
+        "NAME": "M1 Lod",
+        "LINE_ID": 4,
+        "TYPE": "Metro",
+        "YEAR": 2050,
+        "Shape_Length": 21457.941979346037
+      },
+      {
+        "_id": 25,
+        "OID": -1,
+        "NAME": "קו חום",
+        "LINE_ID": 70,
+        "TYPE": "BRT",
+        "YEAR": 2024,
+        "Shape_Length": 2297.0158604784488
+      },
+      {
+        "_id": 26,
+        "OID": -1,
+        "NAME": "קו חום - הארכה אירפורט סיטי",
+        "LINE_ID": 70,
+        "TYPE": "BRT",
+        "YEAR": 2030,
+        "Shape_Length": 5403.893508493377
+      },
+      {
+        "_id": 27,
+        "OID": -1,
+        "NAME": "Elad-Bnei_Brak",
+        "LINE_ID": 16,
+        "TYPE": "LRT",
+        "YEAR": 2050,
+        "Shape_Length": 8758.56245898375
+      },
+      {
+        "_id": 28,
+        "OID": -1,
+        "NAME": "קו אדום",
+        "LINE_ID": 10,
+        "TYPE": "LRT",
+        "YEAR": 2030,
+        "Shape_Length": 2587.9886474199384
+      },
+      {
+        "_id": 29,
+        "OID": -1,
+        "NAME": "Airport",
+        "LINE_ID": 20,
+        "TYPE": "LRT",
+        "YEAR": 2040,
+        "Shape_Length": 9464.243467157165
+      },
+      {
+        "_id": 30,
+        "OID": -1,
+        "NAME": "Rosh_Haain-Ramat_Gan",
+        "LINE_ID": 15,
+        "TYPE": "BRT",
+        "YEAR": 2050,
+        "Shape_Length": 18962.989987574278
+      },
+      {
+        "_id": 31,
+        "OID": -1,
+        "NAME": "Ariel",
+        "LINE_ID": 19,
+        "TYPE": "BRT",
+        "YEAR": 2050,
+        "Shape_Length": 34047.99549323298
+      },
+      {
+        "_id": 32,
+        "OID": -1,
+        "NAME": "קו חום",
+        "LINE_ID": 70,
+        "TYPE": "BRT",
+        "YEAR": 2027,
+        "Shape_Length": 3398.468163741094
+      }
+    ],
+    "fields": [
+      {
+        "id": "_id",
+        "type": "int"
+      },
+      {
+        "id": "OID",
+        "type": "numeric"
+      },
+      {
+        "id": "NAME",
+        "type": "text"
+      },
+      {
+        "id": "LINE_ID",
+        "type": "numeric"
+      },
+      {
+        "id": "TYPE",
+        "type": "text"
+      },
+      {
+        "id": "YEAR",
+        "type": "numeric"
+      },
+      {
+        "id": "Shape_Length",
+        "type": "numeric"
+      }
+    ],
+    "_links": {
+      "start": "/api/3/action/datastore_search?resource_id=bd11e899-65c0-43aa-8264-c07434da22aa&limit=500",
+      "next": "/api/3/action/datastore_search?resource_id=bd11e899-65c0-43aa-8264-c07434da22aa&limit=500&offset=500"
+    },
+    "total": 32,
+    "total_was_estimated": false
+  }
+}
