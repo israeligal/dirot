@@ -29,6 +29,9 @@ import { compareProperties } from "../tools/compare-properties";
 import { queryMadlanAreaPricing } from "../tools/madlan-area";
 import { searchMadlanListings } from "../tools/madlan-listings";
 import { queryMadlanProject } from "../tools/madlan-project";
+import { queryNearbyTransit } from "../tools/nearby-transit";
+import { queryNearbySchools } from "../tools/nearby-schools";
+import { lookupNeighborhood } from "../tools/neighborhood-lookup";
 
 const getModel = () => {
   const modelId = process.env.AI_MODEL || "google/gemini-2.5-pro";
@@ -87,6 +90,9 @@ DATA TOOLS:
 - queryMadlanAreaPricing: Real market pricing for a city/neighborhood from Madlan — average price per sqm, yearly deals, nearby neighborhoods, area insights. Use for pricing context and neighborhood comparison.
 - searchMadlanListings: Search current apartment listings for sale from Madlan — individual listings with prices, sizes, rooms, condition, price history, and computed stats (median price/sqm). Use when user asks about current prices, available apartments, or market activity.
 - queryMadlanProject: Get details about a specific new construction project from Madlan — pricing, unit types, developer, building stage. Use when user mentions a specific project name or wants project-level details.
+- queryNearbyTransit: Find bus stops and light rail stations near a location. Use when assessing transportation access for a property or scoring transit proximity.
+- queryNearbySchools: Find schools near a location. Use when assessing area suitability for families or evaluating neighborhood quality.
+- lookupNeighborhood: Determine which neighborhood / statistical area a coordinate belongs to. Use when you need to identify the neighborhood for an address.
 - saveProperty: Save an address to the user's portfolio with analysis snapshot. Use when user says "save this", "remember this address", or "add to my properties".
 - listProperties: List all saved properties for the user. Use when user asks "show my properties", "what do I have saved", or "my portfolio".
 - removeProperty: Remove a saved property. Use when user says "remove this", "delete from my list", or "I'm not interested in this anymore".
@@ -243,5 +249,9 @@ SOURCE CITATION: At the end of EVERY response, list datasets queried:
     queryMadlanAreaPricing,
     searchMadlanListings,
     queryMadlanProject,
+    // Location-based tools
+    queryNearbyTransit,
+    queryNearbySchools,
+    lookupNeighborhood,
   },
 });

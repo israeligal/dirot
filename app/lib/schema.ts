@@ -442,6 +442,132 @@ export const greenBuildings = pgTable(
   (table) => [index("idx_gb_municipality").on(table.municipalityName)],
 );
 
+// --- Transport Stops ---
+
+export const busStops = pgTable(
+  "bus_stops",
+  {
+    id: serial("id").primaryKey(),
+    ckanId: integer("ckan_id").notNull(),
+    stationId: integer("station_id"),
+    cityCode: integer("city_code"),
+    cityName: text("city_name"),
+    metropolinCode: integer("metropolin_code"),
+    metropolinName: text("metropolin_name"),
+    stationTypeCode: integer("station_type_code"),
+    stationTypeName: text("station_type_name"),
+    stationOperatorTypeCode: integer("station_operator_type_code"),
+    stationOperatorTypeName: text("station_operator_type_name"),
+    lat: real("lat"),
+    lng: real("lng"),
+    ...provenance,
+  },
+  (table) => [
+    index("idx_bus_stops_city").on(table.cityName),
+    index("idx_bus_stops_lat_lng").on(table.lat, table.lng),
+  ],
+);
+
+export const lrtStations = pgTable(
+  "lrt_stations",
+  {
+    id: serial("id").primaryKey(),
+    ckanId: integer("ckan_id").notNull(),
+    oid: integer("oid"),
+    x: real("x"), // ITM X coordinate
+    y: real("y"), // ITM Y coordinate
+    entranceExit: text("entrance_exit"),
+    accessibleEntrance: text("accessible_entrance"),
+    entranceType: text("entrance_type"),
+    notes: text("notes"),
+    line: text("line"),
+    type: text("type"), // תחתית / עילית
+    status: text("status"),
+    yearMonth: integer("year_month"),
+    company: text("company"),
+    metroArea: text("metro_area"),
+    stationName: text("station_name"),
+    entranceLabel: text("entrance_label"),
+    ...provenance,
+  },
+  (table) => [
+    index("idx_lrt_stations_line").on(table.line),
+    index("idx_lrt_stations_name").on(table.stationName),
+    index("idx_lrt_stations_status").on(table.status),
+  ],
+);
+
+export const lrtLines = pgTable(
+  "lrt_lines",
+  {
+    id: serial("id").primaryKey(),
+    ckanId: integer("ckan_id").notNull(),
+    oid: integer("oid"),
+    name: text("name"),
+    lineEn: text("line_en"),
+    frequency: text("frequency"),
+    status: text("status"),
+    yearMonth: integer("year_month"),
+    company: text("company"),
+    startStation: text("start_station"),
+    destination: text("destination"),
+    metroArea: text("metro_area"),
+    length: real("length"),
+    shapeLength: real("shape_length"),
+    ...provenance,
+  },
+  (table) => [
+    index("idx_lrt_lines_name").on(table.name),
+    index("idx_lrt_lines_status").on(table.status),
+  ],
+);
+
+// --- Schools ---
+
+export const schools = pgTable(
+  "schools",
+  {
+    id: serial("id").primaryKey(),
+    ckanId: integer("ckan_id").notNull(),
+    schoolCode: text("school_code"),
+    schoolName: text("school_name"),
+    cityName: text("city_name"),
+    address: text("address"),
+    lat: real("lat"), // WGS84 from UTM_Y
+    lng: real("lng"), // WGS84 from UTM_X
+    locationAccuracy: text("location_accuracy"),
+    ...provenance,
+  },
+  (table) => [
+    index("idx_schools_city").on(table.cityName),
+    index("idx_schools_code").on(table.schoolCode),
+    index("idx_schools_lat_lng").on(table.lat, table.lng),
+  ],
+);
+
+// --- Statistical Areas ---
+
+export const statisticalAreas = pgTable(
+  "statistical_areas",
+  {
+    id: serial("id").primaryKey(),
+    statAreaCode: text("stat_area_code"),
+    cityCode: text("city_code"),
+    cityName: text("city_name"),
+    areaName: text("area_name"),
+    population: integer("population"),
+    geometry: text("geometry"), // GeoJSON polygon as text
+    centroidLat: real("centroid_lat"),
+    centroidLng: real("centroid_lng"),
+    fetchedAt: timestamp("fetched_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_stat_areas_city_code").on(table.cityCode),
+    index("idx_stat_areas_city_name").on(table.cityName),
+    index("idx_stat_areas_code").on(table.statAreaCode),
+  ],
+);
+
 // --- Madlan Raw API Log (never deleted — permanent data lake) ---
 
 export const madlanApiLog = pgTable(
