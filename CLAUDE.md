@@ -2,7 +2,7 @@
 
 # Dirot
 
-AI-powered Pinui Binui (urban renewal) investment analysis agent for the Israeli real estate market. Chat UI backed by a Mastra agent with 13+ data query tools sourcing from Israel's government open data (data.gov.il) stored in PostgreSQL.
+AI-powered Pinui Binui (urban renewal) investment analysis agent for the Israeli real estate market. Chat UI backed by a Mastra agent with 20+ data query tools sourcing from Israel's government open data (data.gov.il), Madlan GraphQL API, and XPLAN planning authority — stored in PostgreSQL.
 
 ## Commands
 
@@ -13,6 +13,8 @@ pnpm lint           # ESLint
 pnpm start          # Start production server
 pnpm test           # Run tests (vitest)
 pnpm test:watch     # Watch mode tests
+pnpm storybook      # Storybook dev (port 6006)
+pnpm storybook:build # Build static Storybook
 ```
 
 ## Framework Stack
@@ -24,31 +26,37 @@ pnpm test:watch     # Watch mode tests
 - **assistant-ui** — Chat UI components with HITL (human-in-the-loop) tool UIs
 - **Tailwind CSS v4** — Single CSS import: `@import "tailwindcss"`, CSS variables for theme
 - **TypeScript 5** with strict mode, **Zod 4** for validation
+- **Storybook 10** — Component documentation and visual testing
+- **Upstash** — Redis-based rate limiting (sliding window) on API routes
+- **PostHog** — Product analytics (client + server-side event tracking)
+- **Resend** — Transactional email (early access notifications)
 
 ## Architecture
 
 ```
 ├── app/
-│   ├── api/chat/        # Chat API route (POST stream, GET history)
+│   ├── api/chat/        # Chat API route (POST stream, GET history, rate-limited)
 │   ├── api/auth/        # Better Auth catch-all handler
-│   ├── lib/             # DB client, Drizzle schema, CKAN constants, types
+│   ├── api/early-access/ # Early access signup (rate-limited)
+│   ├── lib/             # DB client, Drizzle schema, CKAN constants, Madlan client, rate-limit
 │   ├── login/, signup/  # Auth pages
 │   ├── assistant.tsx    # Main chat UI (client component)
 │   └── page.tsx         # Home page → Assistant
 ├── mastra/
 │   ├── agents/          # Agent definition (system prompt, model, tools)
-│   ├── tools/           # 16 Mastra tool files (query, scoring, address, HITL)
+│   ├── tools/           # 22 Mastra tool files (query, scoring, Madlan, address, HITL)
 │   └── index.ts         # Mastra instance (storage, observability)
 ├── components/
 │   ├── assistant-ui/    # Thread, sidebar, markdown components
 │   ├── auth/            # Login/signup forms
 │   ├── tools/           # HITL tool UI components (todo, plan-approval, input)
 │   └── ui/              # shadcn/ui primitives
-├── lib/                 # Auth config (auth.ts server, auth-client.ts client)
+├── lib/                 # Auth config, PostHog server, email (Resend)
 ├── hooks/               # Custom React hooks (use-latest-todos, use-mobile)
-├── scripts/             # DB init, CKAN sync, data verification
+├── scripts/             # DB init, CKAN sync, statistical areas sync, verification
 ├── data/                # Static reference data, stubs
 ├── tools/neon-mcp-slim/ # Slim Neon MCP server for DB access
+├── .storybook/          # Storybook 10 config (main.ts, preview.ts)
 ├── tests/               # Vitest integration tests
 └── proxy.ts             # Route protection (Next.js 16 proxy pattern)
 ```
@@ -73,6 +81,11 @@ AI_MODEL=                  # Provider/model string (default: google/gemini-2.5-p
 BETTER_AUTH_SECRET=        # Auth secret (openssl rand -hex 32)
 BETTER_AUTH_URL=           # Server base URL
 NEXT_PUBLIC_APP_URL=       # Client base URL (public)
+UPSTASH_REDIS_REST_URL=    # Upstash Redis (rate limiting, optional in dev)
+UPSTASH_REDIS_REST_TOKEN=  # Upstash Redis token
+NEXT_PUBLIC_POSTHOG_TOKEN= # PostHog project key
+NEXT_PUBLIC_POSTHOG_HOST=  # PostHog ingest host
+RESEND_API_KEY=            # Resend email API key
 ```
 
 ## Tailwind v4 Notes

@@ -18,6 +18,12 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - `scoring-factors.ts` — Pure scoring functions: infrastructure, stage, cluster, contractor, transport, price, municipal
 - `address.ts` — Address-level search (7 sources in parallel: PB, XPLAN, construction progress, active sites, green buildings, dev costs, lotteries)
 - `developer.ts` — Developer research (gov registry + active sites + Firecrawl web search for reviews/reputation)
+- `madlan-area.ts` — Madlan GraphQL: neighborhood/area insights (demographics, prices, trends)
+- `madlan-listings.ts` — Madlan GraphQL: active property listings search by area
+- `madlan-project.ts` — Madlan GraphQL: specific new construction project details
+- `nearby-schools.ts` — Schools within bounding box (from `schools` table)
+- `nearby-transit.ts` — Bus stops + LRT stations within bounding box (from `bus_stops`, `lrt_stations` tables)
+- `neighborhood-lookup.ts` — Statistical area lookup by coordinates (from `statistical_areas` table)
 - `saved-properties.ts` — Save/list/remove properties per user (3 tools, uses context.agent.resourceId for user ID)
 - `compare-properties.ts` — Compare 2-4 addresses side by side (parallel searchByAddress + scoreProject, renders as HITL card)
 - `update-todos-tool.ts` — HITL: stateful task list management (searches message history for previous state)

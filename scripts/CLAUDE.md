@@ -6,6 +6,7 @@ Scripts for database initialization, CKAN data synchronization, and verification
 
 - `init-db.ts` — Enables PostgreSQL extensions (`pg_trgm` for fuzzy search, `pgvector` optional)
 - `sync-ckan-to-pg.ts` — Fetches all records from 15 CKAN datasets, transforms fields, batch-inserts into PostgreSQL
+- `sync-statistical-areas.ts` — Syncs CBS statistical areas (neighborhoods/polygons) into `statistical_areas` table
 - `create-trgm-indexes.ts` — Creates 15 GIN trigram indexes on key search columns across 9 tables
 - `check-db.ts` — Displays row counts for all tables
 - `verify-data-layer.ts` — Tests all 17 CKAN resources: Hebrew filtering, pagination, error handling, caching
