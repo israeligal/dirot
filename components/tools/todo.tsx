@@ -69,7 +69,7 @@ export const UpdateTodosToolUI = makeAssistantToolUI<
     if (!result) {
       return (
         <div className="my-2 flex w-full animate-pulse items-center gap-2 text-sm font-semibold text-slate-700">
-          Updating Todos...
+          מעדכן משימות...
         </div>
       );
     }
@@ -95,7 +95,7 @@ export const UpdateTodosToolUI = makeAssistantToolUI<
               !isOpen && "-rotate-90",
             )}
           />
-          Tasks
+          משימות
         </button>
 
         <div
@@ -105,9 +105,9 @@ export const UpdateTodosToolUI = makeAssistantToolUI<
           )}
           aria-hidden={!isOpen}
         >
-          <div className="flex flex-col gap-1 overflow-hidden pl-6">
+          <div className="flex flex-col gap-1 overflow-hidden ps-6">
             {todos.length === 0 ? (
-              <div className="text-xs text-slate-500">Nothing queued yet</div>
+              <div className="text-xs text-slate-500">אין משימות בתור</div>
             ) : (
               todos.map((todo, index) => {
                 const isDone = todo.status === "done";

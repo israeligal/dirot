@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "neon-slim": {
+      "command": "node",
+      "args": [
+        "/Users/gal/personal-projects/dirot/tools/neon-mcp-slim/dist/index.js"
+      ],
+      "env": {
+        "DATABASE_URL": "postgresql://neondb_owner:npg_uysaSRWHcZ06@ep-young-silence-amtbrc5n-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require"
+      }
+    }
+  }
+}

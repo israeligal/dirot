@@ -1,24 +1,86 @@
 @AGENTS.md
 
-## Essential Commands
+# Dirot
+
+AI-powered Pinui Binui (urban renewal) investment analysis agent for the Israeli real estate market. Chat UI backed by a Mastra agent with 12+ data query tools sourcing from Israel's government open data (data.gov.il) stored in PostgreSQL.
+
+## Commands
 
 ```bash
-pnpm dev          # Start dev server
-pnpm build        # Production build
-pnpm lint         # ESLint
-pnpm start        # Start production server
+pnpm dev            # Dev server (port 7000, Turbopack)
+pnpm build          # Production build
+pnpm lint           # ESLint
+pnpm start          # Start production server
+pnpm test           # Run tests (vitest)
+pnpm test:watch     # Watch mode tests
 ```
 
 ## Framework Stack
 
 - **Next.js 16** with React 19, Turbopack, App Router
-- **Tailwind CSS v4** - Single CSS import: `@import "tailwindcss"`, CSS variables for theme
-- **TypeScript 5** with strict mode
+- **Mastra** — AI agent framework (agent, tools, memory, observability)
+- **Better Auth** — Email/password auth with invite-only registration
+- **Drizzle ORM** + **Neon PostgreSQL** — Schema in `app/lib/schema.ts`, serverless driver
+- **assistant-ui** — Chat UI components with HITL (human-in-the-loop) tool UIs
+- **Tailwind CSS v4** — Single CSS import: `@import "tailwindcss"`, CSS variables for theme
+- **TypeScript 5** with strict mode, **Zod 4** for validation
+
+## Architecture
+
+```
+├── app/
+│   ├── api/chat/        # Chat API route (POST stream, GET history)
+│   ├── api/auth/        # Better Auth catch-all handler
+│   ├── lib/             # DB client, Drizzle schema, CKAN constants, types
+│   ├── login/, signup/  # Auth pages
+│   ├── assistant.tsx    # Main chat UI (client component)
+│   └── page.tsx         # Home page → Assistant
+├── mastra/
+│   ├── agents/          # Agent definition (system prompt, model, tools)
+│   ├── tools/           # 15 Mastra tool files (query, scoring, HITL)
+│   └── index.ts         # Mastra instance (storage, observability)
+├── components/
+│   ├── assistant-ui/    # Thread, sidebar, markdown components
+│   ├── auth/            # Login/signup forms
+│   ├── tools/           # HITL tool UI components (todo, plan-approval, input)
+│   └── ui/              # shadcn/ui primitives
+├── lib/                 # Auth config (auth.ts server, auth-client.ts client)
+├── scripts/             # DB init, CKAN sync, data verification
+├── data/                # Static reference data, stubs
+├── tests/               # Vitest integration tests
+└── proxy.ts             # Route protection (Next.js 16 proxy pattern)
+```
+
+## Database
+
+Neon PostgreSQL (serverless). Connection via `DATABASE_URL` env var.
+
+- **Auth tables**: `user`, `session`, `account`, `verification` (managed by Better Auth)
+- **Domain tables**: 15 tables for government datasets — see `app/lib/schema.ts`
+- **Mastra tables**: `mastra_threads`, `mastra_messages`, `mastra_ai_spans` (auto-created)
+- **Migrations**: `drizzle-kit` — config in `drizzle.config.ts`, output in `drizzle/`
+- **Fuzzy search**: `pg_trgm` extension for Hebrew text similarity matching
+
+## Environment Variables
+
+```bash
+DATABASE_URL=              # Neon PostgreSQL connection string
+GOOGLE_API_KEY=            # Gemini API key (AI_MODEL defaults to google/gemini-2.5-pro)
+BETTER_AUTH_SECRET=        # Auth secret (openssl rand -hex 32)
+BETTER_AUTH_URL=           # Server base URL
+NEXT_PUBLIC_APP_URL=       # Client base URL (public)
+```
 
 ## Tailwind v4 Notes
 
 - Tailwind v4 renames: `rounded-sm` → `rounded-xs`, `shadow-sm` → `shadow-xs`, `blur-sm` → `blur-xs` (scale shifted in v4)
 - Use design tokens (`bg-muted`, `text-foreground`, `bg-primary`) over hardcoded colors (`bg-gray-50`, `text-blue-600`)
+
+## Feature Documentation
+
+- `.claude/skills/better-auth/` — Auth system patterns, session access, route protection
+- `.claude/skills/traces/` — Agent trace debugging via SQL queries on Mastra observability tables
+- `mastra/tools/CLAUDE.md` — Tool conventions, query patterns, scoring system
 
 ---
 

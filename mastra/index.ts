@@ -2,6 +2,7 @@ import { Mastra } from "@mastra/core";
 import { dirotAgent } from "./agents/dirot-agent";
 import { ConsoleLogger } from "@mastra/core/logger";
 import { PostgresStore } from "@mastra/pg";
+import { Observability, DefaultExporter } from "@mastra/observability";
 
 export const mastra = new Mastra({
   agents: { dirotAgent },
@@ -9,5 +10,13 @@ export const mastra = new Mastra({
   storage: new PostgresStore({
     id: "mastra-storage",
     connectionString: process.env.DATABASE_URL!,
+  }),
+  observability: new Observability({
+    configs: {
+      default: {
+        serviceName: "dirot",
+        exporters: [new DefaultExporter()],
+      },
+    },
   }),
 });

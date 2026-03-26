@@ -39,7 +39,7 @@ const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
       <span className="aui-code-header-language lowercase [&>span]:text-xs">
         {language}
       </span>
-      <TooltipIconButton tooltip="Copy" onClick={onCopy}>
+      <TooltipIconButton tooltip="העתק" onClick={onCopy}>
         {!isCopied && <CopyIcon />}
         {isCopied && <CheckIcon />}
       </TooltipIconButton>
@@ -141,19 +141,19 @@ const defaultComponents = memoizeMarkdownComponents({
   ),
   blockquote: ({ className, ...props }) => (
     <blockquote
-      className={cn("aui-md-blockquote border-l-2 pl-6 italic", className)}
+      className={cn("aui-md-blockquote border-s-2 ps-6 italic", className)}
       {...props}
     />
   ),
   ul: ({ className, ...props }) => (
     <ul
-      className={cn("aui-md-ul my-5 ml-6 list-disc [&>li]:mt-2", className)}
+      className={cn("aui-md-ul my-5 ms-6 list-disc [&>li]:mt-2", className)}
       {...props}
     />
   ),
   ol: ({ className, ...props }) => (
     <ol
-      className={cn("aui-md-ol my-5 ml-6 list-decimal [&>li]:mt-2", className)}
+      className={cn("aui-md-ol my-5 ms-6 list-decimal [&>li]:mt-2", className)}
       {...props}
     />
   ),
@@ -172,7 +172,7 @@ const defaultComponents = memoizeMarkdownComponents({
   th: ({ className, ...props }) => (
     <th
       className={cn(
-        "aui-md-th bg-muted px-4 py-2 text-left font-bold first:rounded-tl-lg last:rounded-tr-lg [&[align=center]]:text-center [&[align=right]]:text-right",
+        "aui-md-th bg-muted px-4 py-2 text-start font-bold first:rounded-ss-lg last:rounded-se-lg [&[align=center]]:text-center [&[align=right]]:text-end",
         className,
       )}
       {...props}
@@ -181,7 +181,7 @@ const defaultComponents = memoizeMarkdownComponents({
   td: ({ className, ...props }) => (
     <td
       className={cn(
-        "aui-md-td border-b border-l px-4 py-2 text-left last:border-r [&[align=center]]:text-center [&[align=right]]:text-right",
+        "aui-md-td border-b border-s px-4 py-2 text-start last:border-e [&[align=center]]:text-center [&[align=right]]:text-end",
         className,
       )}
       {...props}
@@ -190,7 +190,7 @@ const defaultComponents = memoizeMarkdownComponents({
   tr: ({ className, ...props }) => (
     <tr
       className={cn(
-        "aui-md-tr m-0 border-b p-0 first:border-t [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg",
+        "aui-md-tr m-0 border-b p-0 first:border-t [&:last-child>td:first-child]:rounded-es-lg [&:last-child>td:last-child]:rounded-ee-lg",
         className,
       )}
       {...props}

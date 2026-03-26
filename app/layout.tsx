@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Rubik, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const geistSans = Geist({
+const rubik = Rubik({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "hebrew"],
 });
 
 const geistMono = Geist_Mono({
@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dirot - Pinui Binui Investment Analyst",
+  title: "דירות - אנליסט השקעות פינוי בינוי",
   description:
-    "AI-powered analysis of Israeli urban renewal projects, infrastructure plans, and real estate data",
+    "ניתוח מבוסס בינה מלאכותית של פרויקטי התחדשות עירונית, תוכניות תשתית ונתוני נדל״ן בישראל",
 };
 
 export default function RootLayout({
@@ -27,10 +27,10 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl" className="light">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${rubik.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Toaster />
+        <Toaster dir="rtl" position="top-center" />
       </body>
     </html>
   );

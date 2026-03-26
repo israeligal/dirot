@@ -86,7 +86,7 @@ export const ProposeEmailToolUI = makeAssistantToolUI<
     const headerStatus = isCompleted
       ? {
           Icon: approved ? CheckCircle2 : AlertCircle,
-          label: approved ? "Email Approved" : "Email Rejected",
+          label: approved ? "אימייל אושר" : "אימייל נדחה",
           className: approved ? "text-emerald-600" : "text-red-600",
         }
       : null;
@@ -99,11 +99,11 @@ export const ProposeEmailToolUI = makeAssistantToolUI<
         )}
       >
         <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
-          Email Approval
+          אישור אימייל
           {headerStatus && (
             <span
               className={cn(
-                "ml-auto flex items-center gap-1 text-xs font-semibold",
+                "ms-auto flex items-center gap-1 text-xs font-semibold",
                 headerStatus.className,
               )}
             >
@@ -118,7 +118,7 @@ export const ProposeEmailToolUI = makeAssistantToolUI<
             <span className="text-xs font-medium tracking-wide text-slate-400 uppercase">
               To
             </span>
-            <span className="ml-4 flex-1 text-right break-words text-slate-700">
+            <span className="ms-4 flex-1 text-end break-words text-slate-700">
               {args.to}
             </span>
           </div>
@@ -127,8 +127,8 @@ export const ProposeEmailToolUI = makeAssistantToolUI<
             <span className="text-xs font-medium tracking-wide text-slate-400 uppercase">
               Subject
             </span>
-            <span className="ml-4 flex-1 text-right break-words text-slate-700">
-              {args.subject || "Welcome to Assistant UI"}
+            <span className="ms-4 flex-1 text-end break-words text-slate-700">
+              {args.subject || "ברוכים הבאים"}
             </span>
           </div>
 
@@ -138,7 +138,7 @@ export const ProposeEmailToolUI = makeAssistantToolUI<
                 <div className="h-3 w-3/4 animate-pulse rounded bg-slate-200" />
                 <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
                 <div className="h-3 w-5/6 animate-pulse rounded bg-slate-200" />
-                <span className="sr-only">Generating email body…</span>
+                <span className="sr-only">מייצר תוכן אימייל…</span>
               </div>
             ) : (
               <p className="text-sm leading-relaxed whitespace-pre-wrap text-slate-700">
@@ -156,14 +156,14 @@ export const ProposeEmailToolUI = makeAssistantToolUI<
               onClick={handleReject}
               disabled={isBodyLoading}
             >
-              Reject
+              דחה
             </Button>
             <Button
               type="button"
               onClick={handleConfirm}
               disabled={isBodyLoading}
             >
-              Approve Draft
+              אשר טיוטה
             </Button>
           </div>
         )}
@@ -229,11 +229,11 @@ export const RequestInputToolUI = makeAssistantToolUI<
           )}
         >
           <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
-            User Input
+            קלט משתמש
             {isCompleted && hasSubmittedValue && (
-              <span className="ml-auto flex items-center gap-1 text-emerald-600">
+              <span className="ms-auto flex items-center gap-1 text-emerald-600">
                 <CheckCircle2 className="h-4 w-4" aria-hidden />
-                Submitted
+                נשלח
               </span>
             )}
           </div>
@@ -248,7 +248,7 @@ export const RequestInputToolUI = makeAssistantToolUI<
             ) : (
               <>
                 <p className="text-xs text-slate-500">
-                  Provide the requested detail so the assistant can continue.
+                  ספק את הפרט המבוקש כדי שהעוזר יוכל להמשיך.
                 </p>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <Input
@@ -269,7 +269,7 @@ export const RequestInputToolUI = makeAssistantToolUI<
                     onClick={handleSubmit}
                     disabled={!isInputValid || isCompleted}
                   >
-                    Submit
+                    שלח
                   </Button>
                 </div>
               </>

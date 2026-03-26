@@ -61,7 +61,7 @@ export const FirecrawlToolUI = makeAssistantToolUI<
               !isOpen && "-rotate-90",
             )}
           />
-          {isLoading ? "Browsing" : "Browsed"} {hostname}
+          {isLoading ? "גולש" : "נגלש"} {hostname}
         </button>
 
         <div
@@ -71,18 +71,18 @@ export const FirecrawlToolUI = makeAssistantToolUI<
           )}
           aria-hidden={!isOpen}
         >
-          <div className="overflow-hidden pl-6 text-sm leading-relaxed text-slate-600">
+          <div className="overflow-hidden ps-6 text-sm leading-relaxed text-slate-600">
             {isLoading ? (
               <div className="space-y-2" aria-live="polite" aria-busy="true">
                 <div className="h-3 w-1/2 animate-pulse rounded bg-slate-200" />
                 <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
                 <div className="h-3 w-2/3 animate-pulse rounded bg-slate-200" />
-                <span className="sr-only">Browsing {hostname}</span>
+                <span className="sr-only">גולש ב-{hostname}</span>
               </div>
             ) : snippet ? (
               <p className="whitespace-pre-wrap text-slate-700">{snippet}</p>
             ) : (
-              <span className="text-slate-400">No content returned.</span>
+              <span className="text-slate-400">לא הוחזר תוכן.</span>
             )}
           </div>
         </div>
@@ -116,7 +116,7 @@ export const SendEmailToolUI = makeAssistantToolUI<
       >
         <SendIcon className="h-4 w-4" />
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-          {isLoading ? "Sending" : "Sent"} email
+          {isLoading ? "שולח" : "נשלח"} אימייל
           {shortHandle && (
             <span className="text-sm font-medium text-slate-500">
               {shortHandle}

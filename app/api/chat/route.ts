@@ -3,13 +3,19 @@ import { toAISdkV5Messages } from "@mastra/ai-sdk/ui";
 import { createUIMessageStreamResponse } from "ai";
 import { mastra } from "@/mastra";
 import { NextResponse } from "next/server";
-
-const THREAD_ID = "dirot-main-thread";
-const RESOURCE_ID = "default-user";
+import { getSession } from "@/lib/auth";
 
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
+  const session = await getSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const threadId = `dirot-${session.user.id}`;
+  const resourceId = session.user.id;
+
   const params = await req.json();
   const stream = await handleChatStream({
     version: "v6",
@@ -19,8 +25,8 @@ export async function POST(req: Request) {
       ...params,
       memory: {
         ...params.memory,
-        thread: THREAD_ID,
-        resource: RESOURCE_ID,
+        thread: threadId,
+        resource: resourceId,
       },
     },
     defaultOptions: {
@@ -31,13 +37,21 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
+  const session = await getSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const threadId = `dirot-${session.user.id}`;
+  const resourceId = session.user.id;
+
   const memory = await mastra.getAgentById("dirot-agent").getMemory();
   let response = null;
 
   try {
     response = await memory?.recall({
-      threadId: THREAD_ID,
-      resourceId: RESOURCE_ID,
+      threadId,
+      resourceId,
     });
   } catch {
     console.log("No previous messages found.");

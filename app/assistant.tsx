@@ -16,36 +16,66 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { UpdateTodosToolUI } from "@/components/tools/todo";
 import { AskForPlanApprovalToolUI } from "@/components/tools/plan-approval";
 import { RequestInputToolUI } from "@/components/tools/human-in-the-loop";
 import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { useSession, signOut } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 export const Assistant = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
   const runtime = useChatRuntime({
     transport: new AssistantChatTransport({ api: "/api/chat" }),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
   });
 
+  const handleSignOut = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => router.push("/login"),
+      },
+    });
+  };
+
   return (
     <AssistantRuntimeProvider runtime={runtime}>
       <SidebarProvider>
-        <div className="flex h-dvh w-full pr-0.5">
-          <ThreadListSidebar />
+        <div className="flex h-dvh w-full pe-0.5">
+          <ThreadListSidebar side="right" />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
               <SidebarTrigger />
               <Separator
                 orientation="vertical"
-                className="mr-2 h-4 border-border"
+                className="me-2 h-4 border-border"
               />
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Dirot - Pinui Binui Analyst</BreadcrumbPage>
+                    <BreadcrumbPage>דירות - אנליסט פינוי בינוי</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
+              <div className="me-auto" />
+              {session?.user && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">
+                    {session.user.email}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleSignOut}
+                    title="התנתקות"
+                  >
+                    <LogOut className="size-4" />
+                  </Button>
+                </div>
+              )}
             </header>
             <div className="flex-1 overflow-hidden">
               <Thread />

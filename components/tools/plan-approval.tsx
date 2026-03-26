@@ -123,7 +123,7 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
     const headerStatus = isCompleted
       ? {
           icon: isApproved ? CheckCircle2 : AlertCircle,
-          label: isApproved ? "Plan Approved" : "Plan Rejected",
+          label: isApproved ? "התוכנית אושרה" : "התוכנית נדחתה",
           className: isApproved ? "text-emerald-600" : "text-red-600",
         }
       : null;
@@ -136,11 +136,11 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
         )}
       >
         <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-2 text-xs font-medium tracking-wide text-slate-500 uppercase">
-          Plan Approval
+          אישור תוכנית
           {headerStatus && (
             <span
               className={cn(
-                "ml-auto flex items-center gap-1 text-xs font-semibold",
+                "ms-auto flex items-center gap-1 text-xs font-semibold",
                 headerStatus.className,
               )}
             >
@@ -178,12 +178,12 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
                 </ul>
               ) : (
                 <p className="text-sm text-slate-600">
-                  Approved with no tasks in the queue.
+                  אושר ללא משימות בתור.
                 </p>
               )
             ) : (
               <p className="text-sm text-slate-600">
-                Plan rejected. The assistant will revise next steps.
+                התוכנית נדחתה. העוזר יתקן את הצעדים הבאים.
               </p>
             )
           ) : (
@@ -217,7 +217,7 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
                         type="button"
                         onClick={() => handleDelete(index)}
                         className="opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-                        aria-label="Delete task"
+                        aria-label="מחק משימה"
                       >
                         <Trash2 className="h-3.5 w-3.5 text-slate-300 hover:text-slate-500" />
                       </button>
@@ -232,7 +232,7 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
                     onChange={(event) =>
                       handleCreateFromDraft(event.target.value)
                     }
-                    placeholder="<add new>"
+                    placeholder="<הוסף חדש>"
                     className="flex-1 bg-transparent text-sm text-slate-400 outline-none placeholder:text-slate-300"
                   />
                 </li>
@@ -246,7 +246,7 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
                   disabled={isCompleted || isRunning}
                   className="h-8 px-3 text-sm"
                 >
-                  Reject Plan
+                  דחה תוכנית
                 </Button>
                 <Button
                   type="button"
@@ -254,7 +254,7 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
                   disabled={isCompleted || isRunning || todos.length === 0}
                   className="h-8 px-3 text-sm"
                 >
-                  Approve & Continue
+                  אשר והמשך
                 </Button>
               </div>
             </>
