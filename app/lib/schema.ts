@@ -61,6 +61,17 @@ export const verifications = pgTable("verification", {
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
 
+// --- Early Access Signups ---
+
+export const earlyAccessSignups = pgTable("early_access_signups", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text("email").notNull(),
+  name: text("name"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
 // --- Saved Properties ---
 
 export const savedProperties = pgTable(
