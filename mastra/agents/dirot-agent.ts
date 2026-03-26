@@ -76,7 +76,7 @@ DATA TOOLS:
 - searchPublicHousing: Public housing inventory and vacancies
 - searchXplan: ALL planning authority plans at a location — commercial, parks, schools, roads. Not just PB. Each result includes a MAVAT link.
 - scoreProject: 7-factor weighted score (0-100, grade A-F). Queries all sources in parallel. Use FIRST when comparing or ranking.
-- searchByAddress: Look up a specific address (city + street + optional house number). Searches PB projects, planning authority plans, and construction progress in parallel. Use when user asks about a specific property or street.
+- searchByAddress: Look up a specific address (city + street + optional house number). Searches 7 sources in parallel: PB projects, XPLAN plans, construction progress, active construction sites, green buildings, development costs, and nearby lotteries. Use when user asks about a specific property or street.
 
 WORKFLOW TOOLS:
 - updateTodosTool: Create task plan for complex multi-step analysis

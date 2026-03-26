@@ -2,7 +2,7 @@
 
 # Dirot
 
-AI-powered Pinui Binui (urban renewal) investment analysis agent for the Israeli real estate market. Chat UI backed by a Mastra agent with 12+ data query tools sourcing from Israel's government open data (data.gov.il) stored in PostgreSQL.
+AI-powered Pinui Binui (urban renewal) investment analysis agent for the Israeli real estate market. Chat UI backed by a Mastra agent with 13+ data query tools sourcing from Israel's government open data (data.gov.il) stored in PostgreSQL.
 
 ## Commands
 
@@ -37,7 +37,7 @@ pnpm test:watch     # Watch mode tests
 │   └── page.tsx         # Home page → Assistant
 ├── mastra/
 │   ├── agents/          # Agent definition (system prompt, model, tools)
-│   ├── tools/           # 15 Mastra tool files (query, scoring, HITL)
+│   ├── tools/           # 16 Mastra tool files (query, scoring, address, HITL)
 │   └── index.ts         # Mastra instance (storage, observability)
 ├── components/
 │   ├── assistant-ui/    # Thread, sidebar, markdown components
@@ -87,6 +87,7 @@ NEXT_PUBLIC_APP_URL=       # Client base URL (public)
 - `.claude/skills/chat-conversation/` — Chat flow: API route → Mastra agent → assistant-ui streaming
 - `.claude/skills/hitl-tool-ui/` — HITL tool patterns: makeAssistantToolUI, approval/input workflows
 - `.claude/skills/data-pipeline/` — CKAN → PostgreSQL sync pipeline, resource constants, verification
+- `.claude/skills/pinui-binui-analysis/` — 6-pillar PB due diligence framework, Standard 21, risk catalog
 - `mastra/tools/CLAUDE.md` — Tool conventions, query patterns, scoring system
 - `components/assistant-ui/CLAUDE.md` — Chat UI components (thread, sidebar, markdown, attachments)
 - `scripts/CLAUDE.md` — DB init, CKAN sync, trigram indexes, verification scripts

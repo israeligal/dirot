@@ -16,6 +16,7 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - `xplan.ts` — Planning authority plans at location (commercial, parks, schools, roads — not just PB)
 - `scoring.ts` — Orchestrates 7-factor weighted scoring (0-100, grade A-F) via `Promise.allSettled()`
 - `scoring-factors.ts` — Pure scoring functions: infrastructure, stage, cluster, contractor, transport, price, municipal
+- `address.ts` — Address-level search (7 sources in parallel: PB, XPLAN, construction progress, active sites, green buildings, dev costs, lotteries)
 - `update-todos-tool.ts` — HITL: stateful task list management (searches message history for previous state)
 - `ask-for-plan-approval-tool.ts` — HITL: request user approval (no execute fn — framework-handled)
 - `request-input.ts` — HITL: request user input (no execute fn — framework-handled)
@@ -33,6 +34,7 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 ## Gotchas
 
 - `searchInfrastructure` splits limit across 5 sources (`Math.floor(limit/5)`) — total results can exceed requested limit
+- `searchByAddress` queries 7 sources via `Promise.allSettled()` — same partial-failure pattern as scoring
 - `searchContractors` is the only tool with fuzzy match scores; other tools use ILIKE without scoring
 - XPLAN WHERE clause uses string concatenation, not parameterized queries — input validation is critical
 - HITL tools (`askForPlanApproval`, `requestInput`) have no `execute` function — Mastra framework intercepts them

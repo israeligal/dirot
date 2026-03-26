@@ -458,6 +458,89 @@ export async function queryPublicHousing({
   };
 }
 
+// --- Address-level queries (for searchByAddress tool) ---
+
+export async function queryConstructionSitesByAddress({
+  city,
+  siteName,
+  limit = 10,
+}: {
+  city: string;
+  siteName: string;
+  limit?: number;
+}) {
+  const rows = await getSql()`
+    SELECT *, COUNT(*) OVER() as total_count
+    FROM active_construction
+    WHERE city_name ILIKE ${"%" + city + "%"}
+      AND site_name ILIKE ${"%" + siteName + "%"}
+    ORDER BY work_id
+    LIMIT ${limit}
+  `;
+  return formatResult(rows);
+}
+
+export async function queryGreenBuildingsByAddress({
+  city,
+  street,
+  limit = 10,
+}: {
+  city: string;
+  street: string;
+  limit?: number;
+}) {
+  const rows = await getSql()`
+    SELECT *, COUNT(*) OVER() as total_count
+    FROM green_buildings
+    WHERE municipality_name ILIKE ${"%" + city + "%"}
+      AND building_street ILIKE ${"%" + street + "%"}
+    ORDER BY ckan_id
+    LIMIT ${limit}
+  `;
+  return formatResult(rows);
+}
+
+export async function queryDevelopmentCostsByAddress({
+  city,
+  siteName,
+  limit = 10,
+}: {
+  city: string;
+  siteName: string;
+  limit?: number;
+}) {
+  const rows = await getSql()`
+    SELECT *, COUNT(*) OVER() as total_count
+    FROM development_costs
+    WHERE lamas_name ILIKE ${"%" + city + "%"}
+      AND atar_name ILIKE ${"%" + siteName + "%"}
+    ORDER BY ckan_id
+    LIMIT ${limit}
+  `;
+  return formatResult(rows);
+}
+
+export async function queryLotteriesByAddress({
+  city,
+  searchTerm,
+  limit = 10,
+}: {
+  city: string;
+  searchTerm: string;
+  limit?: number;
+}) {
+  const rows = await getSql()`
+    SELECT *, COUNT(*) OVER() as total_count
+    FROM lottery
+    WHERE lamas_name ILIKE ${"%" + city + "%"}
+      AND (project_name ILIKE ${"%" + searchTerm + "%"}
+        OR neighborhood ILIKE ${"%" + searchTerm + "%"})
+    ORDER BY lottery_id DESC
+    LIMIT ${limit}
+  `;
+  return formatResult(rows);
+}
+
 // --- Helpers ---
 
 function formatResult(rows: Record<string, unknown>[]) {
