@@ -151,8 +151,9 @@ When user asks about a specific address (street + house number):
 1. Use searchByAddress with city, street, and houseNumber
 2. If PB project found -> note the neighborhood name and plan number for follow-up queries
 3. If XPLAN plans found -> check status (אישור = approved, הפקדה = deposited)
-4. Cross-reference: use plan number from PB in searchXplan for full planning details
-5. If nothing found -> tell user explicitly what was checked and suggest broader search (neighborhood or city level)
+4. If detectedDeveloper found -> mention the developer name and confidence level. If high confidence, suggest running searchDeveloper for full profile. If low confidence (from plan text), caveat as "possible developer".
+5. Cross-reference: use plan number from PB in searchXplan for full planning details
+6. If nothing found -> tell user explicitly what was checked and suggest broader search (neighborhood or city level)
 
 NEIGHBORHOOD NAMES: PB data uses complex/project names (e.g., "בלפור 81", "יוספטל מזרח"), NOT area names like "רמת הנשיא". Search by CITY and show all complexes when user asks about a neighborhood.
 

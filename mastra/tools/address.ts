@@ -74,6 +74,14 @@ export const searchByAddress = createTool({
       found: z.boolean(),
       lotteries: z.array(z.record(z.string(), z.unknown())),
     }),
+    detectedDeveloper: z.object({
+      found: z.boolean(),
+      developers: z.array(z.object({
+        name: z.string(),
+        source: z.string(),
+        confidence: z.string(),
+      })),
+    }),
     sources: sourcesSchema,
   }),
   execute: async ({ city, street, houseNumber }) => {
@@ -214,6 +222,45 @@ export const searchByAddress = createTool({
     }));
     if (lottery?.source) sources.push(lottery.source);
 
+    // Developer auto-detection
+    const detectedDevelopers: Array<{ name: string; source: string; confidence: string }> = [];
+
+    // From active construction sites (highest confidence — direct executor match)
+    const uniqueContractors = new Set<string>();
+    for (const site of sites) {
+      const name = site.contractor as string | undefined;
+      if (name && !uniqueContractors.has(name)) {
+        uniqueContractors.add(name);
+        detectedDevelopers.push({
+          name,
+          source: "active_construction",
+          confidence: "high",
+        });
+      }
+    }
+
+    // From XPLAN plan objectives (lower confidence — name mentioned in plan text)
+    if (detectedDevelopers.length === 0) {
+      for (const plan of plans) {
+        const objectives = String(plan.objectives ?? "");
+        const companyPatterns = [/חברת\s+(\S+(?:\s+\S+)?)/g, /יזם[:]?\s+(\S+(?:\s+\S+)?)/g];
+        for (const pattern of companyPatterns) {
+          let match;
+          while ((match = pattern.exec(objectives)) !== null) {
+            const name = match[1].trim();
+            if (name.length > 2 && !uniqueContractors.has(name)) {
+              uniqueContractors.add(name);
+              detectedDevelopers.push({
+                name,
+                source: "xplan_objectives",
+                confidence: "low",
+              });
+            }
+          }
+        }
+      }
+    }
+
     // Build summary
     const totalFinds =
       pbProjects.length + plans.length + progressBuildings.length +
@@ -227,6 +274,7 @@ export const searchByAddress = createTool({
     if (greenBuilds.length > 0) parts.push(`${greenBuilds.length} green building(s)`);
     if (devProjects.length > 0) parts.push(`${devProjects.length} development cost record(s)`);
     if (lotteries.length > 0) parts.push(`${lotteries.length} nearby lottery/ies`);
+    if (detectedDevelopers.length > 0) parts.push(`developer detected: ${detectedDevelopers[0].name}`);
 
     const summary =
       totalFinds > 0
@@ -243,6 +291,7 @@ export const searchByAddress = createTool({
       greenBuildings: { found: greenBuilds.length > 0, buildings: greenBuilds },
       developmentCosts: { found: devProjects.length > 0, projects: devProjects },
       nearbyLotteries: { found: lotteries.length > 0, lotteries },
+      detectedDeveloper: { found: detectedDevelopers.length > 0, developers: detectedDevelopers },
       sources,
     };
   },
