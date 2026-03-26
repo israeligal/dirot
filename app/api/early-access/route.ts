@@ -1,8 +1,22 @@
 import { NextResponse } from "next/server"
 import { neon } from "@neondatabase/serverless"
 import { sendEarlyAccessNotification } from "@/lib/email"
+import { getPostHogClient } from "@/lib/posthog-server"
+import { checkRateLimit } from "@/app/lib/rate-limit"
 
 export async function POST(req: Request) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonymous"
+  const { success: rateLimitOk, remaining } = await checkRateLimit({
+    identifier: ip,
+    endpoint: "early-access",
+  })
+  if (!rateLimitOk) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429, headers: { "X-RateLimit-Remaining": String(remaining) } },
+    )
+  }
+
   const body = await req.json()
   const { email, name } = body as { email?: string; name?: string }
 
@@ -29,6 +43,12 @@ export async function POST(req: Request) {
     console.error("[early-access] Email error:", err)
     // Still return success — the signup was saved to DB
   }
+
+  getPostHogClient().capture({
+    distinctId: email,
+    event: "early_access_signup_received",
+    properties: { email, name: name ?? undefined },
+  });
 
   return NextResponse.json({ success: true, message: "הבקשה נשלחה בהצלחה" })
 }

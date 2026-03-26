@@ -1,5 +1,6 @@
 import { makeAssistantToolUI } from "@assistant-ui/react";
 import { useState, useCallback, useRef, useEffect } from "react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { useLatestTodos } from "@/hooks/use-latest-todos";
 import { CheckCircle2, Circle, Clock, Trash2, AlertCircle } from "lucide-react";
@@ -107,6 +108,7 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
     }, []);
 
     const handleApprove = useCallback(() => {
+      posthog.capture("plan_approved", { todo_count: todos.length });
       addResult({
         todos,
         approved: true,
@@ -114,6 +116,7 @@ export const AskForPlanApprovalToolUI = makeAssistantToolUI<
     }, [todos, addResult]);
 
     const handleReject = useCallback(() => {
+      posthog.capture("plan_rejected");
       addResult({
         todos: [],
         approved: false,

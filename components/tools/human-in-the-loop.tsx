@@ -1,6 +1,7 @@
 // import { mastra } from "@/mastra";
 import { makeAssistantTool } from "@assistant-ui/react";
 import { makeAssistantToolUI } from "@assistant-ui/react";
+import posthog from "posthog-js";
 import { useState, useCallback } from "react";
 import type { ChangeEvent, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
@@ -201,6 +202,7 @@ export const RequestInputToolUI = makeAssistantToolUI<
         return;
       }
 
+      posthog.capture("user_input_submitted");
       addResult({
         result: nextValue,
       });

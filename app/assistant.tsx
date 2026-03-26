@@ -25,6 +25,7 @@ import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
+import posthog from "posthog-js";
 
 export const Assistant = () => {
   const router = useRouter();
@@ -35,6 +36,8 @@ export const Assistant = () => {
   });
 
   const handleSignOut = async () => {
+    posthog.capture("user_signed_out");
+    posthog.reset();
     await signOut({
       fetchOptions: {
         onSuccess: () => router.push("/login"),

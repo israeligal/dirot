@@ -4,6 +4,8 @@ import { createUIMessageStreamResponse } from "ai";
 import { mastra } from "@/mastra";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { getPostHogClient } from "@/lib/posthog-server";
+import { checkRateLimit } from "@/app/lib/rate-limit";
 
 export const maxDuration = 30;
 
@@ -13,10 +15,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { success: rateLimitOk, remaining } = await checkRateLimit({
+    identifier: session.user.id,
+    endpoint: "chat",
+  });
+  if (!rateLimitOk) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429, headers: { "X-RateLimit-Remaining": String(remaining) } },
+    );
+  }
+
   const threadId = `dirot-${session.user.id}`;
   const resourceId = session.user.id;
 
   const params = await req.json();
+  getPostHogClient().capture({
+    distinctId: session.user.id,
+    event: "chat_message_sent",
+  });
+
   const stream = await handleChatStream({
     version: "v6",
     mastra,

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { CheckCircle2 } from "lucide-react"
+import posthog from "posthog-js"
 
 export function EarlyAccessForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -33,8 +34,10 @@ export function EarlyAccessForm() {
         return
       }
 
+      posthog.capture("early_access_requested", { email, name: name || undefined })
       setIsSubmitted(true)
-    } catch {
+    } catch (err) {
+      posthog.captureException(err)
       toast.error("שגיאה בשליחת הבקשה")
       setIsLoading(false)
     }

@@ -6,6 +6,7 @@ import { signUp } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import posthog from "posthog-js"
 
 export function SignupForm() {
   const router = useRouter()
@@ -36,10 +37,13 @@ export function SignupForm() {
 
     if (error) {
       toast.error(error.message || "ההרשמה נכשלה")
+      posthog.capture("signup_failed", { error_message: error.message })
       setIsLoading(false)
       return
     }
 
+    posthog.identify(email, { email, name })
+    posthog.capture("user_signed_up", { email, name })
     router.push("/")
   }
 

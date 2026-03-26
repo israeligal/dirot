@@ -6,6 +6,7 @@ import { signIn } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import posthog from "posthog-js"
 
 export function LoginForm() {
   const router = useRouter()
@@ -27,10 +28,13 @@ export function LoginForm() {
 
     if (error) {
       toast.error(error.message || "ההתחברות נכשלה")
+      posthog.capture("login_failed", { error_message: error.message })
       setIsLoading(false)
       return
     }
 
+    posthog.identify(email, { email })
+    posthog.capture("user_logged_in", { email })
     router.push("/")
   }
 
