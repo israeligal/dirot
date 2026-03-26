@@ -441,3 +441,77 @@ export const greenBuildings = pgTable(
   },
   (table) => [index("idx_gb_municipality").on(table.municipalityName)],
 );
+
+// --- Madlan Raw API Log (never deleted — permanent data lake) ---
+
+export const madlanApiLog = pgTable(
+  "madlan_api_log",
+  {
+    id: serial("id").primaryKey(),
+    operationName: text("operation_name").notNull(),
+    endpoint: text("endpoint").notNull(),
+    variables: text("variables").notNull(), // JSON of request variables
+    response: text("response").notNull(), // Full raw JSON response
+    userId: text("user_id"), // Which user triggered this (nullable for system calls)
+    fetchedAt: timestamp("fetched_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_madlan_log_operation").on(table.operationName),
+    index("idx_madlan_log_fetched").on(table.fetchedAt),
+  ],
+);
+
+// --- Madlan Data Cache ---
+
+export const madlanAreaPricing = pgTable(
+  "madlan_area_pricing",
+  {
+    id: serial("id").primaryKey(),
+    docId: text("doc_id").notNull(),
+    city: text("city").notNull(),
+    neighborhood: text("neighborhood"),
+    name: text("name").notNull(),
+    type: text("type").notNull(), // "neighbourhood" | "city"
+    ppa: real("ppa"), // price per area (NIS/sqm)
+    yearNumberOfDeals: integer("year_number_of_deals"),
+    location: text("location"), // JSON [lng, lat]
+    geometry: text("geometry"), // JSON polygon coordinates
+    nearbyNeighborhoods: text("nearby_neighborhoods"), // JSON array
+    fetchedAt: timestamp("fetched_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_madlan_area_doc_id").on(table.docId),
+    index("idx_madlan_area_city").on(table.city),
+  ],
+);
+
+export const madlanListingsCache = pgTable(
+  "madlan_listings_cache",
+  {
+    id: serial("id").primaryKey(),
+    listingId: text("listing_id").notNull(),
+    listingType: text("listing_type").notNull(), // "bulletin" | "project"
+    city: text("city").notNull(),
+    neighborhood: text("neighborhood"),
+    streetName: text("street_name"),
+    streetNumber: text("street_number"),
+    price: integer("price"),
+    areaSqm: real("area_sqm"),
+    beds: real("beds"),
+    floor: text("floor"),
+    buildingYear: integer("building_year"),
+    generalCondition: text("general_condition"),
+    buildingClass: text("building_class"),
+    eventsHistory: text("events_history"), // JSON array of price changes
+    estimatedPrice: integer("estimated_price"),
+    tags: text("tags"), // JSON object with school/safety/park scores
+    lat: real("lat"),
+    lng: real("lng"),
+    fetchedAt: timestamp("fetched_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_madlan_listing_id").on(table.listingId),
+    index("idx_madlan_listing_city").on(table.city),
+    index("idx_madlan_listing_neighborhood").on(table.neighborhood),
+  ],
+);

@@ -222,19 +222,25 @@ export function scoreTransportAccess({
 
 export function scorePriceRelative({
   averagePricePerSqm,
+  madlanPpa,
 }: {
   averagePricePerSqm: number | null;
+  madlanPpa?: number | null;
 }): FactorResult {
-  if (averagePricePerSqm === null) {
-    return { score: 50, detail: "No Dira BeHanacha price data — neutral score" };
-  }
-  const priceK = averagePricePerSqm / 1000;
+  // Prefer Madlan real market data over lottery data
+  const ppa = madlanPpa ?? averagePricePerSqm;
+  const source = madlanPpa ? "Madlan" : "Dira BeHanacha";
 
-  if (priceK < 20) return { score: 90, detail: `${Math.round(priceK)}K NIS/sqm — very affordable` };
-  if (priceK < 30) return { score: 70, detail: `${Math.round(priceK)}K NIS/sqm — affordable` };
-  if (priceK < 40) return { score: 50, detail: `${Math.round(priceK)}K NIS/sqm — moderate` };
-  if (priceK < 50) return { score: 30, detail: `${Math.round(priceK)}K NIS/sqm — expensive` };
-  return { score: 20, detail: `${Math.round(priceK)}K NIS/sqm — very expensive` };
+  if (ppa === null) {
+    return { score: 50, detail: "No price data available — neutral score" };
+  }
+  const priceK = ppa / 1000;
+
+  if (priceK < 20) return { score: 90, detail: `${Math.round(priceK)}K NIS/sqm (${source}) — very affordable` };
+  if (priceK < 30) return { score: 70, detail: `${Math.round(priceK)}K NIS/sqm (${source}) — affordable` };
+  if (priceK < 40) return { score: 50, detail: `${Math.round(priceK)}K NIS/sqm (${source}) — moderate` };
+  if (priceK < 50) return { score: 30, detail: `${Math.round(priceK)}K NIS/sqm (${source}) — expensive` };
+  return { score: 20, detail: `${Math.round(priceK)}K NIS/sqm (${source}) — very expensive` };
 }
 
 export function scoreMunicipalSupport({

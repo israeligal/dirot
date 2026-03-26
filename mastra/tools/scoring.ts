@@ -9,6 +9,8 @@ import {
   type SourceInfo,
 } from "./db-queries";
 import { queryXplan } from "./xplan-queries";
+import { buildDocId } from "../../app/lib/madlan-client";
+import { fetchAreaInfoCached } from "../../app/lib/madlan-cache";
 import {
   getFactorWeights,
   detectStageProfile,
@@ -40,6 +42,7 @@ async function gatherScoringData({
   neighborhood?: string;
   contractorName?: string;
 }) {
+  const madlanDocId = buildDocId({ city, neighborhood });
   const queries = [
     queryUrbanRenewal({ city, neighborhood, limit: 100 }),
     queryConstructionSites({ city, limit: 100 }),
@@ -49,6 +52,7 @@ async function gatherScoringData({
     contractorName
       ? queryContractors({ name: contractorName, limit: 5 })
       : Promise.resolve(null),
+    fetchAreaInfoCached({ docIds: [madlanDocId] }),
   ] as const;
 
   const [
@@ -58,6 +62,7 @@ async function gatherScoringData({
     xplanResult,
     lotteryResult,
     contractorResult,
+    madlanResult,
   ] = await Promise.allSettled(queries);
 
   return {
@@ -67,6 +72,7 @@ async function gatherScoringData({
     xplanResult,
     lotteryResult,
     contractorResult,
+    madlanResult,
   };
 }
 
@@ -77,6 +83,7 @@ function computeFactors({
   xplanResult,
   lotteryResult,
   contractorResult,
+  madlanResult,
   projectStatus,
 }: {
   urbanResult: PromiseSettledResult<Awaited<ReturnType<typeof queryUrbanRenewal>>>;
@@ -85,6 +92,7 @@ function computeFactors({
   xplanResult: PromiseSettledResult<Awaited<ReturnType<typeof queryXplan>>>;
   lotteryResult: PromiseSettledResult<Awaited<ReturnType<typeof queryLotteries>>>;
   contractorResult: PromiseSettledResult<Awaited<ReturnType<typeof queryContractors>> | null>;
+  madlanResult: PromiseSettledResult<Awaited<ReturnType<typeof fetchAreaInfoCached>>>;
   projectStatus?: string;
 }): { stageProfile: StageProfile; factors: FactorOutput[] } {
   const infraCount =
@@ -132,6 +140,11 @@ function computeFactors({
     avgPrice = prices.length > 0 ? prices.reduce((a, b) => a + b, 0) / prices.length : null;
   }
 
+  const madlanPpa =
+    madlanResult.status === "fulfilled" && madlanResult.value.length > 0
+      ? madlanResult.value[0].ppa
+      : null;
+
   const contractorFound =
     contractorResult.status === "fulfilled" &&
     contractorResult.value !== null &&
@@ -164,7 +177,7 @@ function computeFactors({
     { key: "cluster", name: "Neighborhood Cluster", weight: w.clusterEffect, result: scoreClusterEffect({ pbProjectCount: pbCount, constructionSiteCount: siteCount }) },
     { key: "contractor", name: "Contractor Reliability", weight: w.contractorReliability, result: scoreContractorReliability({ found: contractorFound, recognized: contractorRecognized, hasSanctions, sanctionsCount }) },
     { key: "transport", name: "Transportation Access", weight: w.transportAccess, result: scoreTransportAccess({ transitLineCount: transitCount, hasMetroOrLrt: hasMetroOrLrt }) },
-    { key: "price", name: "Price Relative to Area", weight: w.priceRelative, result: scorePriceRelative({ averagePricePerSqm: avgPrice }) },
+    { key: "price", name: "Price Relative to Area", weight: w.priceRelative, result: scorePriceRelative({ averagePricePerSqm: avgPrice, madlanPpa }) },
     { key: "municipal", name: "Municipal Support", weight: w.municipalSupport, result: scoreMunicipalSupport({ track }) },
   ];
 
