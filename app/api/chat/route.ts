@@ -7,7 +7,7 @@ import { getSession } from "@/lib/auth";
 import { getPostHogClient } from "@/lib/posthog-server";
 import { checkRateLimit } from "@/app/lib/rate-limit";
 
-export const maxDuration = 30;
+export const maxDuration = 120;
 
 export async function POST(req: Request) {
   const session = await getSession();
