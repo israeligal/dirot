@@ -49,6 +49,15 @@ export const auth = betterAuth({
     },
   },
 
+  rateLimit: {
+    window: 120,
+    max: 10,
+    customRules: {
+      "/sign-in/email": { window: 120, max: 3 },
+      "/sign-up/email": { window: 120, max: 3 },
+    },
+  },
+
   trustedOrigins: [process.env.BETTER_AUTH_URL!],
 
   plugins: [nextCookies()],

@@ -108,6 +108,23 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000     # Client base URL (public)
 4 tables in `app/lib/schema.ts`: `user`, `session`, `account`, `verification`.
 All use `text` primary keys, `timestamp` dates, CASCADE on delete for foreign keys.
 
+## Rate Limiting
+
+Built-in rate limiting protects auth endpoints from brute-force attacks. Configured in `lib/auth.ts`:
+
+```typescript
+rateLimit: {
+  window: 120,       // 2-minute window (seconds)
+  max: 10,           // general: 10 requests per window
+  customRules: {
+    "/sign-in/email": { window: 120, max: 3 },  // 3 login attempts per 2 min
+    "/sign-up/email": { window: 120, max: 3 },  // 3 signup attempts per 2 min
+  },
+},
+```
+
+Uses in-memory store by default (sufficient for single-server). **All new Better Auth projects must include rate limiting** — never ship without it.
+
 ## CSRF Protection
 
 Better Auth handles CSRF implicitly — no manual token handling needed.
