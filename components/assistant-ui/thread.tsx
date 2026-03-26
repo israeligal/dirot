@@ -87,6 +87,38 @@ const ThreadWelcome: FC = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
+              className="aui-thread-welcome-brand mb-4"
+            >
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                fill="none"
+                className="text-primary"
+                aria-hidden="true"
+              >
+                <rect x="6" y="20" width="14" height="24" rx="2" fill="currentColor" />
+                <rect x="24" y="8" width="18" height="36" rx="2" fill="currentColor" opacity="0.7" />
+                <rect x="9" y="24" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="9" y="30" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="9" y="36" width="3" height="3" rx="0.5" fill="white" opacity="0.5" />
+                <rect x="14" y="24" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="14" y="30" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="14" y="36" width="3" height="3" rx="0.5" fill="white" opacity="0.5" />
+                <rect x="28" y="12" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="28" y="18" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="28" y="24" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="28" y="30" width="3" height="3" rx="0.5" fill="white" opacity="0.5" />
+                <rect x="35" y="12" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="35" y="18" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="35" y="24" width="3" height="3" rx="0.5" fill="white" opacity="0.7" />
+                <rect x="35" y="30" width="3" height="3" rx="0.5" fill="white" opacity="0.5" />
+              </svg>
+            </m.div>
+            <m.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
               className="aui-thread-welcome-message-motion-1 text-2xl font-semibold"
             >
               דירות - אנליסט פינוי בינוי
