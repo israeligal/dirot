@@ -24,6 +24,7 @@ import { searchXplan } from "../tools/xplan";
 import { scoreProject } from "../tools/scoring";
 import { searchByAddress } from "../tools/address";
 import { searchDeveloper } from "../tools/developer";
+import { saveProperty, listProperties, removeProperty } from "../tools/saved-properties";
 
 const getModel = () => {
   const modelId = process.env.AI_MODEL || "google/gemini-2.5-pro";
@@ -79,6 +80,9 @@ DATA TOOLS:
 - scoreProject: 7-factor weighted score (0-100, grade A-F). Queries all sources in parallel. Use FIRST when comparing or ranking.
 - searchByAddress: Look up a specific address (city + street + optional house number). Searches 7 sources in parallel: PB projects, XPLAN plans, construction progress, active construction sites, green buildings, development costs, and nearby lotteries. Use when user asks about a specific property or street.
 - searchDeveloper: Research a developer/company. Combines government contractor registry, active construction sites (with sanctions), and web search (reviews, news, reputation). Use when user asks about a developer, mentions a company name, or wants to assess developer reliability.
+- saveProperty: Save an address to the user's portfolio with analysis snapshot. Use when user says "save this", "remember this address", or "add to my properties".
+- listProperties: List all saved properties for the user. Use when user asks "show my properties", "what do I have saved", or "my portfolio".
+- removeProperty: Remove a saved property. Use when user says "remove this", "delete from my list", or "I'm not interested in this anymore".
 
 WORKFLOW TOOLS:
 - updateTodosTool: Create task plan for complex multi-step analysis
@@ -136,6 +140,11 @@ BIAS COUNTERACTION:
 - After forming a positive view, actively seek what could go wrong.
 - State limitations BEFORE recommendations, not as afterthoughts.
 - If data is insufficient, say so directly — don't pad with vague qualifiers.
+
+SAVED PROPERTIES:
+The user ID is extracted automatically from the session context — no need to pass it.
+After analyzing an address, proactively suggest saving it: "Want me to save this to your properties?"
+When saving, include the score/grade if scoreProject was run. Include analysisData as a JSON string of the key findings for future reference.
 
 ADDRESS LOOKUPS:
 When user asks about a specific address (street + house number):
@@ -212,5 +221,9 @@ SOURCE CITATION: At the end of EVERY response, list datasets queried:
     searchByAddress,
     // Developer research
     searchDeveloper,
+    // Saved properties
+    saveProperty,
+    listProperties,
+    removeProperty,
   },
 });

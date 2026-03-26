@@ -61,6 +61,34 @@ export const verifications = pgTable("verification", {
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
 
+// --- Saved Properties ---
+
+export const savedProperties = pgTable(
+  "saved_properties",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    city: text("city").notNull(),
+    street: text("street").notNull(),
+    houseNumber: text("houseNumber"),
+    nickname: text("nickname"),
+    notes: text("notes"),
+    score: integer("score"),
+    grade: text("grade"),
+    analysisData: text("analysisData"), // JSON string of full analysis snapshot
+    lastAnalyzedAt: timestamp("lastAnalyzedAt").defaultNow(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_sp_user").on(table.userId),
+  ],
+);
+
 // --- Provenance columns (shared by all tables) ---
 const provenance = {
   sourceDataset: text("source_dataset").notNull(),

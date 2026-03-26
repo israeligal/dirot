@@ -18,6 +18,7 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - `scoring-factors.ts` — Pure scoring functions: infrastructure, stage, cluster, contractor, transport, price, municipal
 - `address.ts` — Address-level search (7 sources in parallel: PB, XPLAN, construction progress, active sites, green buildings, dev costs, lotteries)
 - `developer.ts` — Developer research (gov registry + active sites + Firecrawl web search for reviews/reputation)
+- `saved-properties.ts` — Save/list/remove properties per user (3 tools, uses context.agent.resourceId for user ID)
 - `update-todos-tool.ts` — HITL: stateful task list management (searches message history for previous state)
 - `ask-for-plan-approval-tool.ts` — HITL: request user approval (no execute fn — framework-handled)
 - `request-input.ts` — HITL: request user input (no execute fn — framework-handled)
