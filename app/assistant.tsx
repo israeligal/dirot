@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { UpdateTodosToolUI } from "@/components/tools/todo";
 import { AskForPlanApprovalToolUI } from "@/components/tools/plan-approval";
 import { RequestInputToolUI } from "@/components/tools/human-in-the-loop";
+import { ComparisonTableUI } from "@/components/tools/comparison-table";
 import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -82,6 +83,7 @@ export const Assistant = () => {
               <UpdateTodosToolUI />
               <AskForPlanApprovalToolUI />
               <RequestInputToolUI />
+              <ComparisonTableUI />
             </div>
           </SidebarInset>
         </div>

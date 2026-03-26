@@ -25,6 +25,7 @@ import { scoreProject } from "../tools/scoring";
 import { searchByAddress } from "../tools/address";
 import { searchDeveloper } from "../tools/developer";
 import { saveProperty, listProperties, removeProperty } from "../tools/saved-properties";
+import { compareProperties } from "../tools/compare-properties";
 import { queryMadlanAreaPricing } from "../tools/madlan-area";
 import { searchMadlanListings } from "../tools/madlan-listings";
 import { queryMadlanProject } from "../tools/madlan-project";
@@ -89,6 +90,7 @@ DATA TOOLS:
 - saveProperty: Save an address to the user's portfolio with analysis snapshot. Use when user says "save this", "remember this address", or "add to my properties".
 - listProperties: List all saved properties for the user. Use when user asks "show my properties", "what do I have saved", or "my portfolio".
 - removeProperty: Remove a saved property. Use when user says "remove this", "delete from my list", or "I'm not interested in this anymore".
+- compareProperties: Compare 2-4 addresses side by side. Runs searchByAddress + scoreProject for each in parallel. Returns normalized comparison with scores, stages, units, developer, infrastructure, risks. Renders as a visual card in the chat. After the card renders, provide your comparative analysis using the PB analysis skill.
 
 WORKFLOW TOOLS:
 - updateTodosTool: Create task plan for complex multi-step analysis
@@ -104,6 +106,7 @@ CROSS-REFERENCING RECIPES:
 - Compare cities/projects: scoreProject for each -> compare within same project stage
 - Address deep-dive: searchByAddress first -> drill into findings with searchPinuiBinui (by neighborhood), scoreProject, searchXplan (by plan number)
 - Developer deep-dive: searchDeveloper first -> if contractor found, check sanctions context -> use web results to assess reputation and track record
+- Property comparison: compareProperties for 2-4 addresses -> agent writes comparative analysis after card renders
 - Market pricing: queryMadlanAreaPricing for neighborhood-level price/sqm -> searchMadlanListings for individual comparable listings -> compare with lottery data
 - Project evaluation: queryMadlanProject for specific project details -> queryMadlanAreaPricing for surrounding area pricing -> scoreProject for full investment score
 
@@ -234,6 +237,8 @@ SOURCE CITATION: At the end of EVERY response, list datasets queried:
     saveProperty,
     listProperties,
     removeProperty,
+    // Comparison
+    compareProperties,
     // Madlan market data
     queryMadlanAreaPricing,
     searchMadlanListings,
