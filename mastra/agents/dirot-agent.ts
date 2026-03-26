@@ -23,6 +23,7 @@ import { searchPublicHousing } from "../tools/public-housing";
 import { searchXplan } from "../tools/xplan";
 import { scoreProject } from "../tools/scoring";
 import { searchByAddress } from "../tools/address";
+import { searchDeveloper } from "../tools/developer";
 
 const getModel = () => {
   const modelId = process.env.AI_MODEL || "google/gemini-2.5-pro";
@@ -77,6 +78,7 @@ DATA TOOLS:
 - searchXplan: ALL planning authority plans at a location — commercial, parks, schools, roads. Not just PB. Each result includes a MAVAT link.
 - scoreProject: 7-factor weighted score (0-100, grade A-F). Queries all sources in parallel. Use FIRST when comparing or ranking.
 - searchByAddress: Look up a specific address (city + street + optional house number). Searches 7 sources in parallel: PB projects, XPLAN plans, construction progress, active construction sites, green buildings, development costs, and nearby lotteries. Use when user asks about a specific property or street.
+- searchDeveloper: Research a developer/company. Combines government contractor registry, active construction sites (with sanctions), and web search (reviews, news, reputation). Use when user asks about a developer, mentions a company name, or wants to assess developer reliability.
 
 WORKFLOW TOOLS:
 - updateTodosTool: Create task plan for complex multi-step analysis
@@ -91,6 +93,7 @@ CROSS-REFERENCING RECIPES:
 - Investment score: scoreProject first -> drill into weak factors with specific tools
 - Compare cities/projects: scoreProject for each -> compare within same project stage
 - Address deep-dive: searchByAddress first -> drill into findings with searchPinuiBinui (by neighborhood), scoreProject, searchXplan (by plan number)
+- Developer deep-dive: searchDeveloper first -> if contractor found, check sanctions context -> use web results to assess reputation and track record
 
 SCORE INTERPRETATION:
 scoreProject returns a total (0-100) with per-factor breakdown. Your job is to interpret and contextualize, not just report numbers.
@@ -207,5 +210,7 @@ SOURCE CITATION: At the end of EVERY response, list datasets queried:
     scoreProject,
     // Address lookup
     searchByAddress,
+    // Developer research
+    searchDeveloper,
   },
 });

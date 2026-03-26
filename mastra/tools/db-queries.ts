@@ -458,6 +458,38 @@ export async function queryPublicHousing({
   };
 }
 
+// --- Developer lookup ---
+
+export async function queryConstructionSitesByDeveloper({
+  name,
+  city,
+  limit = 20,
+}: {
+  name: string;
+  city?: string;
+  limit?: number;
+}) {
+  if (city) {
+    const rows = await getSql()`
+      SELECT *, COUNT(*) OVER() as total_count
+      FROM active_construction
+      WHERE executor_name ILIKE ${"%" + name + "%"}
+        AND city_name ILIKE ${"%" + city + "%"}
+      ORDER BY work_id
+      LIMIT ${limit}
+    `;
+    return formatResult(rows);
+  }
+  const rows = await getSql()`
+    SELECT *, COUNT(*) OVER() as total_count
+    FROM active_construction
+    WHERE executor_name ILIKE ${"%" + name + "%"}
+    ORDER BY work_id
+    LIMIT ${limit}
+  `;
+  return formatResult(rows);
+}
+
 // --- Address-level queries (for searchByAddress tool) ---
 
 export async function queryConstructionSitesByAddress({
