@@ -24,7 +24,7 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 
 - **Tool definition**: `createTool({ id, description, inputSchema, outputSchema, execute })` from `@mastra/core/tools`
 - **Input schemas**: Optional filters + `limit`/`offset` pagination (defaults: limit=20, offset=0)
-- **Output format**: All query tools return `{ summary, total, records/items, sources[] }`
+- **Output format**: All query tools return `{ summary, total, <domain-named-array>, sources[] }` — array key matches domain (e.g., `projects`, `lotteries`, `plans`, `sites`)
 - **Source metadata**: Extracted from DB columns (`source_dataset`, `resource_id`, `fetched_at`, `data_gov_url`)
 - **Search types**: ILIKE for general text, `%` operator (pg_trgm) for name fuzzy matching, exact match for codes (gush)
 - **Field mapping**: Snake_case DB fields manually mapped to camelCase in each tool's execute function

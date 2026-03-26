@@ -3,12 +3,17 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
+const isDev = process.env.NODE_ENV === "development";
+
 export const ToolFallback: ToolCallMessagePartComponent = ({
   toolName,
   argsText,
   result,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
+
+  if (!isDev) return null;
+
   return (
     <div className="aui-tool-fallback-root mb-4 flex w-full flex-col gap-3 rounded-lg border py-3">
       <div className="aui-tool-fallback-header flex items-center gap-2 px-4">

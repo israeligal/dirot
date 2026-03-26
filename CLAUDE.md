@@ -45,8 +45,10 @@ pnpm test:watch     # Watch mode tests
 │   ├── tools/           # HITL tool UI components (todo, plan-approval, input)
 │   └── ui/              # shadcn/ui primitives
 ├── lib/                 # Auth config (auth.ts server, auth-client.ts client)
+├── hooks/               # Custom React hooks (use-latest-todos, use-mobile)
 ├── scripts/             # DB init, CKAN sync, data verification
 ├── data/                # Static reference data, stubs
+├── tools/neon-mcp-slim/ # Slim Neon MCP server for DB access
 ├── tests/               # Vitest integration tests
 └── proxy.ts             # Route protection (Next.js 16 proxy pattern)
 ```
@@ -56,7 +58,7 @@ pnpm test:watch     # Watch mode tests
 Neon PostgreSQL (serverless). Connection via `DATABASE_URL` env var.
 
 - **Auth tables**: `user`, `session`, `account`, `verification` (managed by Better Auth)
-- **Domain tables**: 15 tables for government datasets — see `app/lib/schema.ts`
+- **Domain tables**: 16 tables for government datasets — see `app/lib/schema.ts`
 - **Mastra tables**: `mastra_threads`, `mastra_messages`, `mastra_ai_spans` (auto-created)
 - **Migrations**: `drizzle-kit` — config in `drizzle.config.ts`, output in `drizzle/`
 - **Fuzzy search**: `pg_trgm` extension for Hebrew text similarity matching
@@ -65,7 +67,9 @@ Neon PostgreSQL (serverless). Connection via `DATABASE_URL` env var.
 
 ```bash
 DATABASE_URL=              # Neon PostgreSQL connection string
-GOOGLE_API_KEY=            # Gemini API key (AI_MODEL defaults to google/gemini-2.5-pro)
+GOOGLE_API_KEY=            # Gemini API key
+GOOGLE_GENERATIVE_AI_API_KEY= # Google Generative AI SDK key
+AI_MODEL=                  # Provider/model string (default: google/gemini-2.5-pro)
 BETTER_AUTH_SECRET=        # Auth secret (openssl rand -hex 32)
 BETTER_AUTH_URL=           # Server base URL
 NEXT_PUBLIC_APP_URL=       # Client base URL (public)
@@ -80,7 +84,12 @@ NEXT_PUBLIC_APP_URL=       # Client base URL (public)
 
 - `.claude/skills/better-auth/` — Auth system patterns, session access, route protection
 - `.claude/skills/traces/` — Agent trace debugging via SQL queries on Mastra observability tables
+- `.claude/skills/chat-conversation/` — Chat flow: API route → Mastra agent → assistant-ui streaming
+- `.claude/skills/hitl-tool-ui/` — HITL tool patterns: makeAssistantToolUI, approval/input workflows
+- `.claude/skills/data-pipeline/` — CKAN → PostgreSQL sync pipeline, resource constants, verification
 - `mastra/tools/CLAUDE.md` — Tool conventions, query patterns, scoring system
+- `components/assistant-ui/CLAUDE.md` — Chat UI components (thread, sidebar, markdown, attachments)
+- `scripts/CLAUDE.md` — DB init, CKAN sync, trigram indexes, verification scripts
 
 ---
 

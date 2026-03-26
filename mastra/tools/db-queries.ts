@@ -99,6 +99,29 @@ export async function queryUrbanRenewal({
   return formatResult(rows);
 }
 
+// --- Urban Renewal by Address (fuzzy street search) ---
+
+export async function queryUrbanRenewalByAddress({
+  city,
+  searchTerm,
+  limit = 10,
+}: {
+  city: string;
+  searchTerm: string;
+  limit?: number;
+}) {
+  const rows = await getSql()`
+    SELECT *, COUNT(*) OVER() as total_count,
+           similarity(shem_mitcham, ${searchTerm}) as match_score
+    FROM urban_renewal
+    WHERE yeshuv ILIKE ${"%" + city + "%"}
+      AND shem_mitcham % ${searchTerm}
+    ORDER BY match_score DESC
+    LIMIT ${limit}
+  `;
+  return formatResult(rows);
+}
+
 // --- Active Construction ---
 
 export async function queryConstructionSites({
@@ -147,14 +170,27 @@ export async function queryConstructionSites({
 export async function queryConstructionProgress({
   city,
   gush,
+  siteName,
   limit = 20,
   offset = 0,
 }: {
   city?: string;
   gush?: string;
+  siteName?: string;
   limit?: number;
   offset?: number;
 }) {
+  if (city && siteName) {
+    const rows = await getSql()`
+      SELECT *, COUNT(*) OVER() as total_count
+      FROM construction_progress
+      WHERE yeshuv_lamas ILIKE ${"%" + city + "%"}
+        AND atar ILIKE ${"%" + siteName + "%"}
+      ORDER BY ckan_id
+      LIMIT ${limit} OFFSET ${offset}
+    `;
+    return formatResult(rows);
+  }
   if (gush) {
     const rows = await getSql()`
       SELECT *, COUNT(*) OVER() as total_count

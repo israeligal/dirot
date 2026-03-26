@@ -22,6 +22,7 @@ import {
 import { searchPublicHousing } from "../tools/public-housing";
 import { searchXplan } from "../tools/xplan";
 import { scoreProject } from "../tools/scoring";
+import { searchByAddress } from "../tools/address";
 
 const getModel = () => {
   const modelId = process.env.AI_MODEL || "google/gemini-2.5-pro";
@@ -75,6 +76,7 @@ DATA TOOLS:
 - searchPublicHousing: Public housing inventory and vacancies
 - searchXplan: ALL planning authority plans at a location — commercial, parks, schools, roads. Not just PB. Each result includes a MAVAT link.
 - scoreProject: 7-factor weighted score (0-100, grade A-F). Queries all sources in parallel. Use FIRST when comparing or ranking.
+- searchByAddress: Look up a specific address (city + street + optional house number). Searches PB projects, planning authority plans, and construction progress in parallel. Use when user asks about a specific property or street.
 
 WORKFLOW TOOLS:
 - updateTodosTool: Create task plan for complex multi-step analysis
@@ -88,6 +90,7 @@ CROSS-REFERENCING RECIPES:
 - Supply analysis: sum additionalUnits from PB projects + construction site count
 - Investment score: scoreProject first -> drill into weak factors with specific tools
 - Compare cities/projects: scoreProject for each -> compare within same project stage
+- Address deep-dive: searchByAddress first -> drill into findings with searchPinuiBinui (by neighborhood), scoreProject, searchXplan (by plan number)
 
 SCORE INTERPRETATION:
 scoreProject returns a total (0-100) with per-factor breakdown. Your job is to interpret and contextualize, not just report numbers.
@@ -130,6 +133,14 @@ BIAS COUNTERACTION:
 - After forming a positive view, actively seek what could go wrong.
 - State limitations BEFORE recommendations, not as afterthoughts.
 - If data is insufficient, say so directly — don't pad with vague qualifiers.
+
+ADDRESS LOOKUPS:
+When user asks about a specific address (street + house number):
+1. Use searchByAddress with city, street, and houseNumber
+2. If PB project found -> note the neighborhood name and plan number for follow-up queries
+3. If XPLAN plans found -> check status (אישור = approved, הפקדה = deposited)
+4. Cross-reference: use plan number from PB in searchXplan for full planning details
+5. If nothing found -> tell user explicitly what was checked and suggest broader search (neighborhood or city level)
 
 NEIGHBORHOOD NAMES: PB data uses complex/project names (e.g., "בלפור 81", "יוספטל מזרח"), NOT area names like "רמת הנשיא". Search by CITY and show all complexes when user asks about a neighborhood.
 
@@ -194,5 +205,7 @@ SOURCE CITATION: At the end of EVERY response, list datasets queried:
     // XPLAN + Scoring
     searchXplan,
     scoreProject,
+    // Address lookup
+    searchByAddress,
   },
 });
