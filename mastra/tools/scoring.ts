@@ -10,7 +10,8 @@ import {
 } from "./db-queries";
 import { queryXplan } from "./xplan-queries";
 import {
-  FACTOR_WEIGHTS,
+  getFactorWeights,
+  detectStageProfile,
   scoreInfrastructureProximity,
   scoreProjectStage,
   scoreClusterEffect,
@@ -19,6 +20,7 @@ import {
   scorePriceRelative,
   scoreMunicipalSupport,
   computeGrade,
+  type StageProfile,
 } from "./scoring-factors";
 
 interface FactorOutput {
@@ -84,7 +86,7 @@ function computeFactors({
   lotteryResult: PromiseSettledResult<Awaited<ReturnType<typeof queryLotteries>>>;
   contractorResult: PromiseSettledResult<Awaited<ReturnType<typeof queryContractors>> | null>;
   projectStatus?: string;
-}): FactorOutput[] {
+}): { stageProfile: StageProfile; factors: FactorOutput[] } {
   const infraCount =
     infraResult.status === "fulfilled"
       ? Object.values(infraResult.value.totalBySource).reduce((a, b) => a + b, 0)
@@ -153,7 +155,9 @@ function computeFactors({
         ).length
       : 0;
 
-  const w = FACTOR_WEIGHTS;
+  const stageProfile = detectStageProfile({ status });
+  const w = getFactorWeights({ stage: stageProfile });
+
   const factors: Array<{ key: string; name: string; weight: number; result: { score: number; detail: string } }> = [
     { key: "infrastructure", name: "Infrastructure Proximity", weight: w.infrastructureProximity, result: scoreInfrastructureProximity({ infrastructureCount: infraCount, xplanCount }) },
     { key: "stage", name: "Project Stage", weight: w.projectStage, result: scoreProjectStage({ status }) },
@@ -164,13 +168,16 @@ function computeFactors({
     { key: "municipal", name: "Municipal Support", weight: w.municipalSupport, result: scoreMunicipalSupport({ track }) },
   ];
 
-  return factors.map((f) => ({
-    name: f.name,
-    weight: f.weight,
-    score: f.result.score,
-    weightedScore: Math.round(f.result.score * f.weight * 10) / 10,
-    detail: f.result.detail,
-  }));
+  return {
+    stageProfile,
+    factors: factors.map((f) => ({
+      name: f.name,
+      weight: f.weight,
+      score: f.result.score,
+      weightedScore: Math.round(f.result.score * f.weight * 10) / 10,
+      detail: f.result.detail,
+    })),
+  };
 }
 
 export const scoreProject = createTool({
@@ -196,6 +203,7 @@ export const scoreProject = createTool({
     summary: z.string(),
     totalScore: z.number(),
     grade: z.string(),
+    weightProfile: z.string(),
     factors: z.array(
       z.object({
         name: z.string(),
@@ -223,7 +231,7 @@ export const scoreProject = createTool({
       contractorName: input.contractorName,
     });
 
-    const factors = computeFactors({
+    const { stageProfile, factors } = computeFactors({
       ...data,
       projectStatus: input.projectStatus,
     });
@@ -232,8 +240,11 @@ export const scoreProject = createTool({
       factors.reduce((sum, f) => sum + f.weightedScore, 0),
     );
     const grade = computeGrade({ totalScore });
+    const weightProfile = stageProfile === "default"
+      ? "default (stage unknown)"
+      : `${stageProfile} (stage-adjusted weights)`;
 
-    const summary = `Investment score for ${input.city}${input.neighborhood ? ` (${input.neighborhood})` : ""}: ${totalScore}/100 (Grade ${grade}). Top factor: ${factors.sort((a, b) => b.weightedScore - a.weightedScore)[0].name}.`;
+    const summary = `Investment score for ${input.city}${input.neighborhood ? ` (${input.neighborhood})` : ""}: ${totalScore}/100 (Grade ${grade}). Weight profile: ${weightProfile}. Top factor: ${factors.sort((a, b) => b.weightedScore - a.weightedScore)[0].name}.`;
 
     const sources: SourceInfo[] = [];
     if (data.urbanResult.status === "fulfilled" && data.urbanResult.value.source) {
@@ -245,6 +256,6 @@ export const scoreProject = createTool({
 
     console.log("[scoreProject] score:", totalScore, "grade:", grade);
 
-    return { summary, totalScore, grade, factors, sources };
+    return { summary, totalScore, grade, weightProfile, factors, sources };
   },
 });

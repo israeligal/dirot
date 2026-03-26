@@ -8,15 +8,106 @@ export interface FactorResult {
   detail: string;
 }
 
-export const FACTOR_WEIGHTS = {
-  infrastructureProximity: 0.25,
-  projectStage: 0.20,
-  clusterEffect: 0.15,
-  contractorReliability: 0.15,
-  transportAccess: 0.10,
-  priceRelative: 0.10,
-  municipalSupport: 0.05,
-} as const;
+export type StageProfile =
+  | "pre-plan"
+  | "submitted"
+  | "approved"
+  | "permit"
+  | "construction"
+  | "default";
+
+export interface FactorWeights {
+  infrastructureProximity: number;
+  projectStage: number;
+  clusterEffect: number;
+  contractorReliability: number;
+  transportAccess: number;
+  priceRelative: number;
+  municipalSupport: number;
+}
+
+const STAGE_WEIGHT_PROFILES: Record<StageProfile, FactorWeights> = {
+  "pre-plan": {
+    infrastructureProximity: 0.20,
+    projectStage: 0.30,
+    clusterEffect: 0.15,
+    contractorReliability: 0.05,
+    transportAccess: 0.10,
+    priceRelative: 0.10,
+    municipalSupport: 0.10,
+  },
+  submitted: {
+    infrastructureProximity: 0.22,
+    projectStage: 0.25,
+    clusterEffect: 0.15,
+    contractorReliability: 0.10,
+    transportAccess: 0.10,
+    priceRelative: 0.10,
+    municipalSupport: 0.08,
+  },
+  approved: {
+    infrastructureProximity: 0.25,
+    projectStage: 0.15,
+    clusterEffect: 0.15,
+    contractorReliability: 0.15,
+    transportAccess: 0.10,
+    priceRelative: 0.12,
+    municipalSupport: 0.08,
+  },
+  permit: {
+    infrastructureProximity: 0.25,
+    projectStage: 0.10,
+    clusterEffect: 0.15,
+    contractorReliability: 0.20,
+    transportAccess: 0.10,
+    priceRelative: 0.15,
+    municipalSupport: 0.05,
+  },
+  construction: {
+    infrastructureProximity: 0.25,
+    projectStage: 0.05,
+    clusterEffect: 0.15,
+    contractorReliability: 0.25,
+    transportAccess: 0.10,
+    priceRelative: 0.15,
+    municipalSupport: 0.05,
+  },
+  default: {
+    infrastructureProximity: 0.25,
+    projectStage: 0.20,
+    clusterEffect: 0.15,
+    contractorReliability: 0.15,
+    transportAccess: 0.10,
+    priceRelative: 0.10,
+    municipalSupport: 0.05,
+  },
+};
+
+/** @deprecated Use getFactorWeights() instead */
+export const FACTOR_WEIGHTS = STAGE_WEIGHT_PROFILES.default;
+
+export function detectStageProfile({
+  status,
+}: {
+  status: string | null;
+}): StageProfile {
+  if (!status) return "default";
+  const s = status.trim();
+  if (s.includes("בביצוע") || s.includes("בנייה")) return "construction";
+  if (s.includes("היתר") || s.includes("רישוי")) return "permit";
+  if (s.includes("תוקף") || s.includes("אישור")) return "approved";
+  if (s.includes("הפקדה")) return "submitted";
+  if (s.includes("הכרזה")) return "pre-plan";
+  return "default";
+}
+
+export function getFactorWeights({
+  stage,
+}: {
+  stage: StageProfile;
+}): FactorWeights {
+  return STAGE_WEIGHT_PROFILES[stage];
+}
 
 const STATUS_SCORE_MAP: Array<{ pattern: string; score: number; label: string }> = [
   { pattern: "בביצוע", score: 95, label: "Under construction" },
