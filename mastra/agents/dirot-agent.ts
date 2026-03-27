@@ -26,9 +26,9 @@ import { searchByAddress } from "../tools/address";
 import { searchDeveloper } from "../tools/developer";
 import { saveProperty, listProperties, removeProperty } from "../tools/saved-properties";
 import { compareProperties } from "../tools/compare-properties";
-import { queryMadlanAreaPricing } from "../tools/madlan-area";
-import { searchMadlanListings } from "../tools/madlan-listings";
-import { queryMadlanProject } from "../tools/madlan-project";
+import { queryAreaPricing } from "../tools/madlan-area";
+import { searchListings } from "../tools/madlan-listings";
+import { queryProject } from "../tools/madlan-project";
 import { queryNearbyTransit } from "../tools/nearby-transit";
 import { queryNearbySchools } from "../tools/nearby-schools";
 import { lookupNeighborhood } from "../tools/neighborhood-lookup";
@@ -87,9 +87,9 @@ DATA TOOLS:
 - scoreProject: 7-factor weighted score (0-100, grade A-F). Queries all sources in parallel. Renders a visual score card in the chat (grade badge, progress bar, per-factor breakdown). Use FIRST when comparing or ranking. Also use to conclude any extensive city/area research — the visual card gives the user a clear summary.
 - searchByAddress: Look up a specific address (city + street + optional house number). Searches 7 sources in parallel: PB projects, XPLAN plans, construction progress, active construction sites, green buildings, development costs, and nearby lotteries. Use when user asks about a specific property or street.
 - searchDeveloper: Research a developer/company. Combines government contractor registry, active construction sites (with sanctions), and web search (reviews, news, reputation). Use when user asks about a developer, mentions a company name, or wants to assess developer reliability.
-- queryMadlanAreaPricing: Real market pricing for a city/neighborhood from Madlan — average price per sqm, yearly deals, nearby neighborhoods, area insights. Use for pricing context and neighborhood comparison.
-- searchMadlanListings: Search current apartment listings for sale from Madlan — individual listings with prices, sizes, rooms, condition, price history, and computed stats (median price/sqm). Use when user asks about current prices, available apartments, or market activity.
-- queryMadlanProject: Get details about a specific new construction project from Madlan — pricing, unit types, developer, building stage. Use when user mentions a specific project name or wants project-level details.
+- queryAreaPricing: Real market pricing for a city/neighborhood — average price per sqm, yearly deals, nearby neighborhoods, area insights. Use for pricing context and neighborhood comparison.
+- searchListings: Search current apartment listings for sale — individual listings with prices, sizes, rooms, condition, price history, and computed stats (median price/sqm). Use when user asks about current prices, available apartments, or market activity.
+- queryProject: Get details about a specific new construction project — pricing, unit types, developer, building stage. Use when user mentions a specific project name or wants project-level details.
 - queryNearbyTransit: Find bus stops and light rail stations near a location. Use when assessing transportation access for a property or scoring transit proximity.
 - queryNearbySchools: Find schools near a location. Use when assessing area suitability for families or evaluating neighborhood quality.
 - lookupNeighborhood: Determine which neighborhood / statistical area a coordinate belongs to. Use when you need to identify the neighborhood for an address.
@@ -113,8 +113,8 @@ CROSS-REFERENCING RECIPES:
 - Address deep-dive: searchByAddress first -> drill into findings with searchPinuiBinui (by neighborhood), searchXplan (by plan number) -> scoreProject to conclude with visual summary
 - Developer deep-dive: searchDeveloper first -> if contractor found, check sanctions context -> use web results to assess reputation and track record
 - Property comparison: compareProperties for 2-4 addresses -> agent writes comparative analysis after card renders
-- Market pricing: queryMadlanAreaPricing for neighborhood-level price/sqm -> searchMadlanListings for individual comparable listings -> compare with lottery data
-- Project evaluation: queryMadlanProject for specific project details -> queryMadlanAreaPricing for surrounding area pricing -> scoreProject for full investment score
+- Market pricing: queryAreaPricing for neighborhood-level price/sqm -> searchListings for individual comparable listings -> compare with lottery data
+- Project evaluation: queryProject for specific project details -> queryAreaPricing for surrounding area pricing -> scoreProject for full investment score
 
 WHEN TO USE scoreProject:
 - When the user explicitly asks for a score or rating
@@ -252,10 +252,10 @@ SOURCE CITATION: At the end of EVERY response, list datasets queried:
     removeProperty,
     // Comparison
     compareProperties,
-    // Madlan market data
-    queryMadlanAreaPricing,
-    searchMadlanListings,
-    queryMadlanProject,
+    // Market data
+    queryAreaPricing,
+    searchListings,
+    queryProject,
     // Location-based tools
     queryNearbyTransit,
     queryNearbySchools,

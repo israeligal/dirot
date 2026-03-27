@@ -274,14 +274,14 @@ export function scorePublicTransport({
   return { score: TRANSPORT_THRESHOLDS.none, detail: "לא אותרה תחבורה ציבורית" }
 }
 
-/** מחיר — Price (Madlan only, no lottery fallback) */
+/** מחיר — Price (market data, no lottery fallback) */
 export function scorePrice({
   madlanPpa,
 }: {
   madlanPpa: number | null
 }): FactorResult {
   if (madlanPpa === null || madlanPpa === 0) {
-    return { score: null, detail: "אין נתוני מחיר שוק (Madlan) — הפקטור הושמט" }
+    return { score: null, detail: "אין נתוני מחיר שוק — הפקטור הושמט" }
   }
 
   const priceK = madlanPpa / 1000

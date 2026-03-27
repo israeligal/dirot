@@ -2,7 +2,7 @@
 
 # Dirot
 
-AI-powered Pinui Binui (urban renewal) investment analysis agent for the Israeli real estate market. Chat UI backed by a Mastra agent with 20+ data query tools sourcing from Israel's government open data (data.gov.il), Madlan GraphQL API, and XPLAN planning authority — stored in PostgreSQL.
+AI-powered Pinui Binui (urban renewal) investment analysis agent for the Israeli real estate market. Chat UI backed by a Mastra agent with 20+ data query tools sourcing from Israel's government open data (data.gov.il), real estate market data APIs, and XPLAN planning authority — stored in PostgreSQL.
 
 ## Commands
 
@@ -40,13 +40,13 @@ pnpm storybook:build # Build static Storybook
 │   ├── api/early-access/ # Early access signup (rate-limited)
 │   ├── app/             # Authenticated chat app route (/app)
 │   │   └── page.tsx     # → Assistant component
-│   ├── lib/             # DB client, Drizzle schema, CKAN constants, Madlan client, rate-limit
+│   ├── lib/             # DB client, Drizzle schema, CKAN constants, market data client, rate-limit
 │   ├── login/, signup/  # Auth pages
 │   ├── assistant.tsx    # Main chat UI (client component)
 │   └── page.tsx         # Landing page (public)
 ├── mastra/
 │   ├── agents/          # Agent definition (system prompt, model, tools)
-│   ├── tools/           # 22 Mastra tool files (query, scoring, Madlan, address, HITL)
+│   ├── tools/           # 22 Mastra tool files (query, scoring, market data, address, HITL)
 │   └── index.ts         # Mastra instance (storage, observability)
 ├── components/
 │   ├── assistant-ui/    # Thread, sidebar, markdown components

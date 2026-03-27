@@ -15,12 +15,12 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - `public-housing.ts` — Public housing inventory and vacancies
 - `xplan.ts` — Planning authority plans at location (commercial, parks, schools, roads — not just PB)
 - `scoring.ts` — Orchestrates 7-factor weighted scoring (0-100, grade A-F) via `Promise.allSettled()`. Drops unknown factors and redistributes weights.
-- `scoring-factors.ts` — Pure scoring functions: שירותי שכונה, שלב תכנוני (with time decay), מומנטום עירוני, יזם/קבלן, תחבורה ציבורית, מחיר (Madlan only), תמיכת רשות
+- `scoring-factors.ts` — Pure scoring functions: שירותי שכונה, שלב תכנוני (with time decay), מומנטום עירוני, יזם/קבלן, תחבורה ציבורית, מחיר (market data only), תמיכת רשות
 - `address.ts` — Address-level search (7 sources in parallel: PB, XPLAN, construction progress, active sites, green buildings, dev costs, lotteries)
 - `developer.ts` — Developer research (gov registry + active sites + Firecrawl web search for reviews/reputation)
-- `madlan-area.ts` — Madlan GraphQL: neighborhood/area insights (demographics, prices, trends)
-- `madlan-listings.ts` — Madlan GraphQL: active property listings search by area
-- `madlan-project.ts` — Madlan GraphQL: specific new construction project details
+- `madlan-area.ts` — Market data: neighborhood/area insights (demographics, prices, trends)
+- `madlan-listings.ts` — Market data: active property listings search by area
+- `madlan-project.ts` — Market data: specific new construction project details
 - `nearby-schools.ts` — Schools within bounding box (from `schools` table)
 - `nearby-transit.ts` — Bus stops + LRT stations within bounding box (from `bus_stops`, `lrt_stations` tables)
 - `neighborhood-lookup.ts` — Statistical area lookup by coordinates (from `statistical_areas` table)

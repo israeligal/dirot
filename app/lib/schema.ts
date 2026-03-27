@@ -579,7 +579,7 @@ export const statisticalAreas = pgTable(
   ],
 );
 
-// --- Madlan Raw API Log (never deleted — permanent data lake) ---
+// --- Market Data API Log (never deleted — permanent data lake) ---
 
 export const madlanApiLog = pgTable(
   "madlan_api_log",
@@ -598,7 +598,7 @@ export const madlanApiLog = pgTable(
   ],
 );
 
-// --- Madlan Data Cache ---
+// --- Market Data Cache ---
 
 export const madlanAreaPricing = pgTable(
   "madlan_area_pricing",

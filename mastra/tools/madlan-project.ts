@@ -2,15 +2,15 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { fetchProjectById } from "../../app/lib/madlan-client";
 
-export const queryMadlanProject = createTool({
-  id: "query-madlan-project",
+export const queryProject = createTool({
+  id: "query-project",
   description:
-    "Get details about a specific new construction project from Madlan. Returns pricing, unit types, developer, building stage, and urban renewal status.",
+    "Get details about a specific new construction project. Returns pricing, unit types, developer, building stage, and urban renewal status.",
   inputSchema: z.object({
     projectId: z
       .string()
       .describe(
-        "Madlan project ID (e.g., מגרש_13_בפארק_הים_בת_ים or NISENBOIM_33_BAT_YAM)",
+        "Project ID (e.g., מגרש_13_בפארק_הים_בת_ים or NISENBOIM_33_BAT_YAM)",
       ),
   }),
   outputSchema: z.object({
@@ -56,10 +56,10 @@ export const queryMadlanProject = createTool({
 
     const sources = [
       {
-        dataset: "madlan",
-        resourceId: "api2",
+        dataset: "market-data",
+        resourceId: "api",
         fetchedAt: new Date().toISOString(),
-        url: "https://www.madlan.co.il",
+        url: "",
       },
     ];
 

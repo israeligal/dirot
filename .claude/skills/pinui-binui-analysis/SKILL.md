@@ -20,13 +20,13 @@ The `scoreProject` tool computes a weighted investment score (0-100, grade A-F).
 | Planning Stage | שלב תכנוני | Project status + time-since-approval decay | `status` + `shnat_matan_tokef` |
 | Municipal Momentum | מומנטום עירוני | % of city PB projects in advanced stages | `urban_renewal` grouped by status |
 | Municipal Support | תמיכת רשות | Tax track (מיסוי = היטל השבחה exemption) | `maslul` field |
-| Price | מחיר | Market price relative to area | Madlan (ppa) ONLY — no lottery data |
+| Price | מחיר | Market price relative to area | Market data (ppa) ONLY — no lottery data |
 | Contractor | יזם/קבלן | Registration, recognition, sanctions | `contractors` + `active_construction` |
 
 ### When Factors Are Dropped
 
 - **Contractor not identified** → factor dropped, weight redistributed
-- **No Madlan market pricing** → price factor dropped
+- **No market pricing data** → price factor dropped
 - **No status data** → stage factor dropped
 - **No PB projects in city** → momentum factor dropped
 - **No track data (טרם הוכרז)** → municipal support dropped
@@ -122,7 +122,7 @@ Required majority: **67% of all owners** (since 2025 reform, down from 80%), wit
 Understanding market pricing, supply pipeline, and municipal momentum.
 
 **What to check:**
-- **Madlan market pricing:** real price per sqm in the area (ONLY source for price scoring — no lottery data)
+- **Market pricing data:** real price per sqm in the area (ONLY source for price scoring — no lottery data)
 - **Municipal momentum:** what % of the city's PB projects are progressing vs. stuck. Show breakdown: "X במימוש, Y אחרי רישוי, Z לפני מימוש, W תכנון"
 - **Municipal track:** מיסוי (tax benefits) vs. רשויות (standard process)
 - Green building certifications nearby (quality signal)
@@ -132,7 +132,7 @@ Understanding market pricing, supply pipeline, and municipal momentum.
 **Interpretation:**
 - 60%+ of city projects in advanced stages = strong municipal momentum
 - מיסוי track = tax benefits including היטל השבחה (betterment levy) exemption
-- No Madlan price data = price factor dropped from score
+- No market price data = price factor dropped from score
 
 ### Pillar 6: Transport & Neighborhood Services (תחבורה ושירותים)
 

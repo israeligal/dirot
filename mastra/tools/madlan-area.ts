@@ -7,10 +7,10 @@ import {
 } from "../../app/lib/madlan-client";
 import { fetchAreaInfoCached } from "../../app/lib/madlan-cache";
 
-export const queryMadlanAreaPricing = createTool({
-  id: "query-madlan-area-pricing",
+export const queryAreaPricing = createTool({
+  id: "query-area-pricing",
   description:
-    "Get real market pricing data for a city or neighborhood from Madlan. Returns average price per sqm (NIS), number of deals in the last year, nearby neighborhoods, and area insights (livability, parks, transport, schools).",
+    "Get real market pricing data for a city or neighborhood. Returns average price per sqm (NIS), number of deals in the last year, nearby neighborhoods, and area insights (livability, parks, transport, schools).",
   inputSchema: z.object({
     city: z.string().describe("City name in Hebrew (e.g., בת ים)"),
     neighborhood: z
@@ -69,14 +69,14 @@ export const queryMadlanAreaPricing = createTool({
     const dealsStr = areas[0]?.yearNumberOfDeals
       ? `${areas[0].yearNumberOfDeals} deals/year`
       : "";
-    const summary = `Madlan area data for ${input.neighborhood ? `${input.neighborhood}, ` : ""}${input.city}: ${ppaStr}${dealsStr ? `, ${dealsStr}` : ""}.`;
+    const summary = `Area pricing for ${input.neighborhood ? `${input.neighborhood}, ` : ""}${input.city}: ${ppaStr}${dealsStr ? `, ${dealsStr}` : ""}.`;
 
     const sources = [
       {
-        dataset: "madlan",
-        resourceId: "api2",
+        dataset: "market-data",
+        resourceId: "api",
         fetchedAt: new Date().toISOString(),
-        url: "https://www.madlan.co.il",
+        url: "",
       },
     ];
 

@@ -3,10 +3,10 @@ import { z } from "zod";
 import { buildDocId } from "../../app/lib/madlan-client";
 import { searchListingsCached } from "../../app/lib/madlan-cache";
 
-export const searchMadlanListings = createTool({
-  id: "search-madlan-listings",
+export const searchListings = createTool({
+  id: "search-listings",
   description:
-    "Search current apartment listings for sale in a city or neighborhood from Madlan. Returns individual listings with prices, sizes, rooms, condition, price history, and computed stats (median price/sqm).",
+    "Search current apartment listings for sale in a city or neighborhood. Returns individual listings with prices, sizes, rooms, condition, price history, and computed stats (median price/sqm).",
   inputSchema: z.object({
     city: z.string().describe("City name in Hebrew"),
     neighborhood: z
@@ -121,10 +121,10 @@ export const searchMadlanListings = createTool({
 
     const sources = [
       {
-        dataset: "madlan",
-        resourceId: "api2",
+        dataset: "market-data",
+        resourceId: "api",
         fetchedAt: new Date().toISOString(),
-        url: "https://www.madlan.co.il",
+        url: "",
       },
     ];
 
