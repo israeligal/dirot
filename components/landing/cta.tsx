@@ -94,7 +94,7 @@ export function CTA() {
                   required
                   autoComplete="email"
                   dir="ltr"
-                  className="h-12 text-base"
+                  className="h-12 text-base placeholder:text-right"
                 />
                 <Button
                   type="submit"
