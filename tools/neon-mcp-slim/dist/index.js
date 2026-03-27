@@ -15,7 +15,7 @@ const server = new McpServer({
 });
 server.tool("sql", "Execute SQL query on Dirot DB", { query: z.string().describe("SQL to execute") }, async ({ query }) => {
     try {
-        const result = await sql.call(null, [query]);
+        const result = await sql.query(query);
         return {
             content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
         };

@@ -652,3 +652,31 @@ export const madlanListingsCache = pgTable(
     index("idx_madlan_listing_neighborhood").on(table.neighborhood),
   ],
 );
+
+// --- User Investment Preferences ---
+
+export const userPreferences = pgTable(
+  "user_preferences",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" })
+      .unique(),
+    investorType: text("investorType"), // "מגורים" | "השקעה" | "שניהם"
+    investmentHorizon: text("investmentHorizon"), // "קצר" | "בינוני" | "ארוך"
+    riskTolerance: text("riskTolerance"), // "שמרני" | "מאוזן" | "אגרסיבי"
+    budgetRange: text("budgetRange"), // "עד 1.5M" | "1.5-2.5M" | "2.5-4M" | "4M+"
+    experienceLevel: text("experienceLevel"), // "ראשון" | "יש ניסיון" | "מנוסה"
+    areasOfInterest: text("areasOfInterest"), // JSON array: ["בת ים","חולון"]
+    responseStyle: text("responseStyle").default("מקצועי"), // "מקצועי" | "תמציתי" | "מפורט" | "חם" | "לימודי"
+    customInstructions: text("customInstructions"),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_prefs_user").on(table.userId),
+  ],
+);
