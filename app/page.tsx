@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { LandingNav } from "@/components/landing/nav"
 import { Hero } from "@/components/landing/hero"
 import { ChatDemo } from "@/components/landing/chat-demo"
@@ -23,7 +24,10 @@ export default function LandingPage() {
       <footer className="border-t border-border px-6 py-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between text-xs text-muted-foreground">
           <span>דירות &copy; {new Date().getFullYear()}</span>
-          <span>ניתוח השקעות פינוי בינוי מבוסס בינה מלאכותית</span>
+          <div className="flex items-center gap-4">
+            <Link href="/terms" className="hover:text-foreground">תנאי שימוש</Link>
+            <Link href="/privacy" className="hover:text-foreground">פרטיות</Link>
+          </div>
         </div>
       </footer>
     </main>
