@@ -1,48 +1,134 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { motion, useInView } from "motion/react"
-import { Bot, User, CheckCircle2 } from "lucide-react"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { motion, useInView, AnimatePresence } from "motion/react"
+import { Bot, User, CheckCircle2, Building2, MapPin, TrendingUp } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-const USER_MESSAGE = "מה הסטטוס של החשמונאים 22, בת ים?"
-
-const AGENT_LINES = [
-  "**סטטוס עדכני: החשמונאים 22, בת ים**",
-  "",
-  "הבניין ברחוב החשמונאים 22 נכלל בפרויקט פינוי בינוי שאושר תכנונית.",
-  "",
-  "**ממצאים:**",
-  "- **מצב התכנית:** תכנית מאושרת — אחרי רישוי (2022)",
-  "- **מספר תכנית:** 502-0612366",
-  "- **היקף:** 68 דירות קיימות → 267 דירות חדשות",
-  "- **בנייה ירוקה:** כן, הוגשה בקשה לשלב א׳",
-  "- **בנייה פעילה:** לא — ממתין להיתר בנייה",
-]
-
-const SCORE_CARD = {
-  score: 72,
-  grade: "B",
-  factors: [
-    { label: "שלב תכנוני", value: "85/100" },
-    { label: "תשתיות", value: "68/100" },
-    { label: "יזם", value: "62/100" },
-  ],
+interface ScoreCard {
+  score: number
+  grade: string
+  factors: { label: string; value: string }[]
 }
 
-const TYPING_SPEED_MS = 25
-const LINE_PAUSE_MS = 120
-const USER_TYPING_SPEED_MS = 40
+interface Conversation {
+  id: string
+  label: string
+  icon: typeof Building2
+  userMessage: string
+  agentLines: string[]
+  scoreCard?: ScoreCard
+}
+
+const CONVERSATIONS: Conversation[] = [
+  {
+    id: "building",
+    label: "ניתוח בניין",
+    icon: Building2,
+    userMessage: "מה הסטטוס של החשמונאים 22, בת ים?",
+    agentLines: [
+      "**סטטוס עדכני: החשמונאים 22, בת ים**",
+      "",
+      "הבניין נכלל בפרויקט פינוי בינוי במתחם ״החשמונאים/יוספטל״ שאושר תכנונית.",
+      "",
+      "**ממצאים:**",
+      "- **מצב התכנית:** תכנית מאושרת — אחרי רישוי (2022)",
+      "- **מספר תכנית:** 502-0612366",
+      "- **היקף:** 68 דירות קיימות → 267 דירות חדשות (+61 תוספתיות)",
+      "- **מסלול:** מיסוי — הטבות מס זמינות",
+      "- **בנייה פעילה:** לא — ממתין להיתר בנייה",
+      "",
+      "**חוזק מרכזי:** ריכוזיות גבוהה מאוד — 37 פרויקטי פינוי בינוי מאושרים בבת ים.",
+      "**חולשה:** אין תחבורה המונית מתוכננת באזור — ציון תחבורה 20/100.",
+    ],
+    scoreCard: {
+      score: 68,
+      grade: "B",
+      factors: [
+        { label: "שלב תכנוני", value: "85" },
+        { label: "ריכוזיות", value: "100" },
+        { label: "מחיר", value: "90" },
+        { label: "תחבורה", value: "20" },
+      ],
+    },
+  },
+  {
+    id: "city",
+    label: "פרויקטים בעיר",
+    icon: MapPin,
+    userMessage: "ספר לי על פרויקטי פינוי בינוי מתקדמים בפתח תקווה",
+    agentLines: [
+      "**פרויקטי פינוי בינוי — פתח תקווה**",
+      "",
+      "אותרו **12 תכניות מאושרות** ברחבי העיר.",
+      "",
+      "**פרויקטים מתקדמים:**",
+      "- **מתחם רוטשילד:** 156 → 480 יח״ד, בשלב רישוי",
+      "- **מתחם הרצל מזרח:** 210 → 650 יח״ד, תכנית בתוקף",
+      "- **שכונת אם המושבות:** 3 פרויקטים מאושרים, 890 יח״ד חדשות",
+      "",
+      "**אתרי בנייה פעילים:** 6 אתרים, 3 קבלנים ללא צווי בטיחות.",
+      "",
+      "**מגמה:** פתח תקווה נמצאת בצמיחה — קרבה לרכבת הקלה מגדילה עניין של יזמים.",
+    ],
+  },
+  {
+    id: "potential",
+    label: "אזורים מומלצים",
+    icon: TrendingUp,
+    userMessage: "איזה אזורים הכי מתקדמים בפינוי בינוי? איפה הפוטנציאל?",
+    agentLines: [
+      "**אזורים מובילים בפינוי בינוי — 2026**",
+      "",
+      "**Tier 1 — הכי מתקדמים:**",
+      "- **בת ים:** 37 תכניות מאושרות, 8,500+ יח״ד חדשות. פרויקט מצדה כבר במימוש.",
+      "- **גבעתיים:** 15 תכניות, ביקוש גבוה בשל קרבה לת״א.",
+      "",
+      "**Tier 2 — פוטנציאל גבוה:**",
+      "- **פתח תקווה:** 12 תכניות + רכבת קלה = עליית ערך צפויה.",
+      "- **חולון:** 18 תכניות מאושרות, מחירי כניסה נמוכים יחסית.",
+      "",
+      "**המלצה:** בת ים וגבעתיים מציעות את הוודאות הגבוהה ביותר. פתח תקווה — פוטנציאל עליית ערך הגבוה ביותר בזכות תשתיות חדשות.",
+    ],
+  },
+]
+
+const TYPING_SPEED_MS = 20
+const LINE_PAUSE_MS = 80
+const USER_TYPING_SPEED_MS = 35
 
 export function ChatDemo() {
   const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const [activeTab, setActiveTab] = useState(0)
   const [phase, setPhase] = useState<"idle" | "user-typing" | "thinking" | "agent-typing" | "score" | "done">("idle")
   const [userText, setUserText] = useState("")
   const [agentLines, setAgentLines] = useState<string[]>([])
   const [currentLineChars, setCurrentLineChars] = useState("")
   const [showScore, setShowScore] = useState(false)
+  const [playedTabs, setPlayedTabs] = useState<Set<number>>(new Set())
   const bottomRef = useRef<HTMLDivElement>(null)
 
+  const conversation = CONVERSATIONS[activeTab]
+
+  const showInstantly = useCallback((index: number) => {
+    const conv = CONVERSATIONS[index]
+    setUserText(conv.userMessage)
+    setAgentLines(conv.agentLines)
+    setCurrentLineChars("")
+    setShowScore(!!conv.scoreCard)
+    setPhase("done")
+  }, [])
+
+  const resetAndPlay = useCallback((index: number) => {
+    setUserText("")
+    setAgentLines([])
+    setCurrentLineChars("")
+    setShowScore(false)
+    setPhase("user-typing")
+  }, [])
+
+  // Start on first view
   useEffect(() => {
     if (isInView && phase === "idle") {
       setPhase("user-typing")
@@ -53,39 +139,46 @@ export function ChatDemo() {
   useEffect(() => {
     if (phase !== "user-typing") return
     let i = 0
+    const msg = conversation.userMessage
     const interval = setInterval(() => {
       i++
-      setUserText(USER_MESSAGE.slice(0, i))
-      if (i >= USER_MESSAGE.length) {
+      setUserText(msg.slice(0, i))
+      if (i >= msg.length) {
         clearInterval(interval)
         setTimeout(() => setPhase("thinking"), 400)
       }
     }, USER_TYPING_SPEED_MS)
     return () => clearInterval(interval)
-  }, [phase])
+  }, [phase, conversation.userMessage])
 
   // Thinking pause
   useEffect(() => {
     if (phase !== "thinking") return
-    const timeout = setTimeout(() => setPhase("agent-typing"), 1500)
+    const timeout = setTimeout(() => setPhase("agent-typing"), 1200)
     return () => clearTimeout(timeout)
   }, [phase])
 
-  // Agent typing — line by line, char by char
+  // Agent typing
   useEffect(() => {
     if (phase !== "agent-typing") return
+    const lines = conversation.agentLines
     let lineIdx = 0
     let charIdx = 0
     let cancelled = false
 
     function typeNext() {
       if (cancelled) return
-      if (lineIdx >= AGENT_LINES.length) {
-        setPhase("score")
+      if (lineIdx >= lines.length) {
+        if (conversation.scoreCard) {
+          setPhase("score")
+        } else {
+          setPlayedTabs((prev) => new Set(prev).add(activeTab))
+          setPhase("done")
+        }
         return
       }
 
-      const line = AGENT_LINES[lineIdx]
+      const line = lines[lineIdx]
       if (charIdx < line.length) {
         charIdx++
         setCurrentLineChars(line.slice(0, charIdx))
@@ -101,19 +194,20 @@ export function ChatDemo() {
 
     typeNext()
     return () => { cancelled = true }
-  }, [phase])
+  }, [phase, conversation.agentLines, conversation.scoreCard])
 
   // Score card reveal
   useEffect(() => {
     if (phase !== "score") return
     const timeout = setTimeout(() => {
       setShowScore(true)
+      setPlayedTabs((prev) => new Set(prev).add(activeTab))
       setPhase("done")
     }, 400)
     return () => clearTimeout(timeout)
-  }, [phase])
+  }, [phase, activeTab])
 
-  // Auto-scroll within chat container only (not the page)
+  // Auto-scroll within chat container only
   useEffect(() => {
     const el = bottomRef.current
     if (!el) return
@@ -122,6 +216,16 @@ export function ChatDemo() {
       container.scrollTop = container.scrollHeight
     }
   }, [userText, agentLines, currentLineChars, showScore])
+
+  const handleTabSwitch = (index: number) => {
+    if (index === activeTab) return
+    setActiveTab(index)
+    if (playedTabs.has(index)) {
+      showInstantly(index)
+    } else {
+      resetAndPlay(index)
+    }
+  }
 
   return (
     <section id="demo" className="px-6 py-12" ref={ref}>
@@ -139,6 +243,32 @@ export function ChatDemo() {
           <p className="text-muted-foreground">
             שאל שאלה בעברית — קבל ניתוח מקיף תוך שניות
           </p>
+        </motion.div>
+
+        {/* Conversation tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mb-4 flex justify-center gap-2"
+        >
+          {CONVERSATIONS.map((conv, i) => (
+            <button
+              key={conv.id}
+              type="button"
+              onClick={() => handleTabSwitch(i)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all",
+                i === activeTab
+                  ? "border-primary/30 bg-primary/8 text-primary"
+                  : "border-transparent bg-muted/40 text-muted-foreground hover:bg-muted/70",
+              )}
+            >
+              <conv.icon className="h-3.5 w-3.5" />
+              {conv.label}
+            </button>
+          ))}
         </motion.div>
 
         {/* Chat window mockup */}
@@ -163,101 +293,112 @@ export function ChatDemo() {
 
           {/* Chat messages */}
           <div data-chat-scroll className="flex h-[420px] flex-col gap-4 overflow-y-auto p-5 md:h-[480px]">
-            {/* User message */}
-            {userText && (
-              <div className="flex items-start gap-3">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted">
-                  <User className="h-3.5 w-3.5 text-muted-foreground" />
-                </div>
-                <div className="rounded-lg bg-muted/50 px-4 py-2.5 text-sm text-foreground">
-                  {userText}
-                  {phase === "user-typing" && (
-                    <span className="mr-0.5 inline-block h-4 w-0.5 animate-pulse bg-foreground" />
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Thinking indicator */}
-            {phase === "thinking" && (
-              <div className="flex items-start gap-3">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                  <Bot className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <div className="flex items-center gap-1.5 rounded-lg bg-primary/5 px-4 py-2.5">
-                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary/40 [animation-delay:0ms]" />
-                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary/40 [animation-delay:150ms]" />
-                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary/40 [animation-delay:300ms]" />
-                </div>
-              </div>
-            )}
-
-            {/* Agent response */}
-            {(agentLines.length > 0 || currentLineChars) && (
-              <div className="flex items-start gap-3">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                  <Bot className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <div className="flex-1 space-y-1 text-sm leading-relaxed text-foreground">
-                  {agentLines.map((line, i) => (
-                    <AgentLine key={i} text={line} />
-                  ))}
-                  {currentLineChars && <AgentLine text={currentLineChars} />}
-                  {phase === "agent-typing" && (
-                    <span className="inline-block h-4 w-0.5 animate-pulse bg-primary/60" />
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Score card */}
-            {showScore && (
+            <AnimatePresence mode="wait">
               <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="mr-10 overflow-hidden rounded-lg border border-border"
+                key={activeTab}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-col gap-4"
               >
-                <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-2">
-                  <span className="text-xs font-medium uppercase text-muted-foreground">
-                    ציון השקעה
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-blue-600" />
-                    <span className="text-xs font-semibold text-blue-600">
-                      {SCORE_CARD.grade}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="mb-3 flex items-center gap-3">
-                    <span className="text-3xl font-bold tabular-nums text-foreground">
-                      {SCORE_CARD.score}
-                    </span>
-                    <div className="flex-1">
-                      <div className="h-2 w-full rounded-full bg-muted">
-                        <motion.div
-                          className="h-2 rounded-full bg-blue-500"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${SCORE_CARD.score}%` }}
-                          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        />
-                      </div>
+                {/* User message */}
+                {userText && (
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted">
+                      <User className="h-3.5 w-3.5 text-muted-foreground" />
+                    </div>
+                    <div className="rounded-lg bg-muted/50 px-4 py-2.5 text-sm text-foreground">
+                      {userText}
+                      {phase === "user-typing" && (
+                        <span className="mr-0.5 inline-block h-4 w-0.5 animate-pulse bg-foreground" />
+                      )}
                     </div>
                   </div>
-                  <div className="flex gap-4">
-                    {SCORE_CARD.factors.map((f) => (
-                      <div key={f.label} className="flex-1">
-                        <div className="text-[11px] text-muted-foreground">{f.label}</div>
-                        <div className="text-sm font-semibold tabular-nums text-foreground">
-                          {f.value}
+                )}
+
+                {/* Thinking indicator */}
+                {phase === "thinking" && (
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                      <Bot className="h-3.5 w-3.5 text-primary" />
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-lg bg-primary/5 px-4 py-2.5">
+                      <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary/40 [animation-delay:0ms]" />
+                      <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary/40 [animation-delay:150ms]" />
+                      <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary/40 [animation-delay:300ms]" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Agent response */}
+                {(agentLines.length > 0 || currentLineChars) && (
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                      <Bot className="h-3.5 w-3.5 text-primary" />
+                    </div>
+                    <div className="flex-1 space-y-1 text-sm leading-relaxed text-foreground">
+                      {agentLines.map((line, i) => (
+                        <AgentLine key={i} text={line} />
+                      ))}
+                      {currentLineChars && <AgentLine text={currentLineChars} />}
+                      {phase === "agent-typing" && (
+                        <span className="inline-block h-4 w-0.5 animate-pulse bg-primary/60" />
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Score card (only for building analysis) */}
+                {showScore && conversation.scoreCard && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    className="mr-10 overflow-hidden rounded-lg border border-border"
+                  >
+                    <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-2">
+                      <span className="text-xs font-medium uppercase text-muted-foreground">
+                        ציון השקעה
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-blue-600" />
+                        <span className="text-xs font-semibold text-blue-600">
+                          {conversation.scoreCard.grade}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <div className="mb-3 flex items-center gap-3">
+                        <span className="text-3xl font-bold tabular-nums text-foreground">
+                          {conversation.scoreCard.score}
+                        </span>
+                        <div className="flex-1">
+                          <div className="h-2 w-full rounded-full bg-muted">
+                            <motion.div
+                              className="h-2 rounded-full bg-blue-500"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${conversation.scoreCard.score}%` }}
+                              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                            />
+                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                      <div className="flex gap-4">
+                        {conversation.scoreCard.factors.map((f) => (
+                          <div key={f.label} className="flex-1">
+                            <div className="text-[11px] text-muted-foreground">{f.label}</div>
+                            <div className="text-sm font-semibold tabular-nums text-foreground">
+                              {f.value}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
-            )}
+            </AnimatePresence>
 
             <div ref={bottomRef} />
           </div>
@@ -270,7 +411,6 @@ export function ChatDemo() {
 function AgentLine({ text }: { text: string }) {
   if (!text) return <div className="h-2" />
 
-  // Simple bold markdown rendering
   const parts = text.split(/(\*\*[^*]+\*\*)/)
   return (
     <p>
