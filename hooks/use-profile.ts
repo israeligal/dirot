@@ -37,7 +37,7 @@ export function useProfile() {
   const updateField = useCallback(
     async ({ field, value }: { field: string; value: string | null }) => {
       setProfile((prev) =>
-        prev ? { ...prev, [field]: value } : ({ [field]: value } as Profile),
+        prev ? { ...prev, [field]: value } : ({ [field]: value } as unknown as Profile),
       );
 
       try {

@@ -8,7 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { ThreadListSidebar } from "@/components/assistant-ui/threadlist-sidebar";
+import { ProfileSidebar } from "@/components/profile/profile-sidebar";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -50,7 +50,7 @@ export const Assistant = () => {
     <AssistantRuntimeProvider runtime={runtime}>
       <SidebarProvider>
         <div className="flex h-dvh w-full pe-0.5">
-          <ThreadListSidebar side="right" />
+          <ProfileSidebar side="right" />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
               <SidebarTrigger />
