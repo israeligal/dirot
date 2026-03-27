@@ -38,10 +38,12 @@ pnpm storybook:build # Build static Storybook
 │   ├── api/chat/        # Chat API route (POST stream, GET history, rate-limited)
 │   ├── api/auth/        # Better Auth catch-all handler
 │   ├── api/early-access/ # Early access signup (rate-limited)
+│   ├── app/             # Authenticated chat app route (/app)
+│   │   └── page.tsx     # → Assistant component
 │   ├── lib/             # DB client, Drizzle schema, CKAN constants, Madlan client, rate-limit
 │   ├── login/, signup/  # Auth pages
 │   ├── assistant.tsx    # Main chat UI (client component)
-│   └── page.tsx         # Home page → Assistant
+│   └── page.tsx         # Landing page (public)
 ├── mastra/
 │   ├── agents/          # Agent definition (system prompt, model, tools)
 │   ├── tools/           # 22 Mastra tool files (query, scoring, Madlan, address, HITL)
@@ -49,7 +51,8 @@ pnpm storybook:build # Build static Storybook
 ├── components/
 │   ├── assistant-ui/    # Thread, sidebar, markdown components
 │   ├── auth/            # Login/signup forms
-│   ├── tools/           # HITL tool UI components (todo, plan-approval, input)
+│   ├── landing/         # Landing page sections (hero, chat-demo, CTA, etc.)
+│   ├── tools/           # Tool UI components (score-card, comparison-table, HITL tools)
 │   └── ui/              # shadcn/ui primitives
 ├── lib/                 # Auth config, PostHog server, email (Resend)
 ├── hooks/               # Custom React hooks (use-latest-todos, use-mobile)
