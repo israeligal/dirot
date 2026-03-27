@@ -337,7 +337,7 @@ export function scoreMunicipalSupport({
 
   const trimmed = track.trim()
   if (trimmed.includes("מיסוי")) {
-    return { score: 80, detail: "מסלול מיסוי — פטור מהיטל השבחה" }
+    return { score: 60, detail: "מסלול מיסוי — סטנדרטי ברוב פרויקטי פינוי בינוי" }
   }
   if (trimmed.includes("רשויות") || trimmed.includes("עירוני")) {
     return { score: 50, detail: "מסלול רשויות — תהליך סטנדרטי" }
