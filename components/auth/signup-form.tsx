@@ -32,7 +32,7 @@ export function SignupForm() {
       name,
       email,
       password,
-      callbackURL: "/",
+      callbackURL: "/app",
     })
 
     if (error) {
@@ -44,7 +44,7 @@ export function SignupForm() {
 
     posthog.identify(email, { email, name })
     posthog.capture("user_signed_up", { email, name })
-    router.push("/")
+    router.push("/app")
   }
 
   return (

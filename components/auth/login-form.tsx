@@ -23,7 +23,7 @@ export function LoginForm() {
     const { error } = await signIn.email({
       email,
       password,
-      callbackURL: "/",
+      callbackURL: "/app",
     })
 
     if (error) {
@@ -35,7 +35,7 @@ export function LoginForm() {
 
     posthog.identify(email, { email })
     posthog.capture("user_logged_in", { email })
-    router.push("/")
+    router.push("/app")
   }
 
   return (

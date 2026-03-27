@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { auth } from "@/lib/auth"
 
-const PROTECTED_ROUTES = ["/"]
+const PROTECTED_ROUTES = ["/app"]
 const AUTH_ROUTES = ["/login", "/signup"]
 
 export async function proxy(req: NextRequest) {
@@ -35,7 +35,7 @@ export async function proxy(req: NextRequest) {
   }
 
   if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(new URL("/", req.nextUrl.origin))
+    return NextResponse.redirect(new URL("/app", req.nextUrl.origin))
   }
 
   return NextResponse.next()
