@@ -28,8 +28,9 @@ export function CTA() {
       })
 
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || "שגיאה בשליחת הבקשה")
+        const text = await res.text()
+        const errorMsg = text ? JSON.parse(text).error : "שגיאה בשליחת הבקשה"
+        throw new Error(errorMsg || "שגיאה בשליחת הבקשה")
       }
 
       setIsSubmitted(true)

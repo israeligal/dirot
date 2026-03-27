@@ -44,11 +44,15 @@ export async function POST(req: Request) {
     // Still return success — the signup was saved to DB
   }
 
-  getPostHogClient().capture({
-    distinctId: email,
-    event: "early_access_signup_received",
-    properties: { email, name: name ?? undefined },
-  });
+  try {
+    getPostHogClient().capture({
+      distinctId: email,
+      event: "early_access_signup_received",
+      properties: { email, name: name ?? undefined },
+    });
+  } catch (err) {
+    console.error("[early-access] PostHog error:", err)
+  }
 
   return NextResponse.json({ success: true, message: "הבקשה נשלחה בהצלחה" })
 }

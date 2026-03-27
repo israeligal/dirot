@@ -26,10 +26,10 @@ export function EarlyAccessForm() {
         body: JSON.stringify({ email, name }),
       })
 
-      const data = await res.json()
-
       if (!res.ok) {
-        toast.error(data.error || "שגיאה בשליחת הבקשה")
+        const text = await res.text()
+        const errorMsg = text ? JSON.parse(text).error : "שגיאה בשליחת הבקשה"
+        toast.error(errorMsg || "שגיאה בשליחת הבקשה")
         setIsLoading(false)
         return
       }

@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import { LoginForm } from "@/components/auth/login-form"
 import { EarlyAccessForm } from "@/components/auth/early-access-form"
 
@@ -18,16 +17,6 @@ export default function LoginPage() {
           </div>
 
           <LoginForm />
-
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            אין לך חשבון?{" "}
-            <Link
-              href="/signup"
-              className="text-primary font-medium hover:underline"
-            >
-              הרשמה
-            </Link>
-          </p>
         </div>
 
         {/* Early access card */}
