@@ -215,7 +215,7 @@ export const compareProperties = createTool({
         | undefined;
 
       const infraFactor = scoreResult?.factors?.find(
-        (f) => f.name === "Infrastructure Proximity",
+        (f) => f.name === "שירותי שכונה",
       );
 
       return {

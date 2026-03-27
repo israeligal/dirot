@@ -14,8 +14,8 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - `professionals.ts` — Contractors (pg_trgm fuzzy) + brokers/appraisers (exports 2 tools)
 - `public-housing.ts` — Public housing inventory and vacancies
 - `xplan.ts` — Planning authority plans at location (commercial, parks, schools, roads — not just PB)
-- `scoring.ts` — Orchestrates 7-factor weighted scoring (0-100, grade A-F) via `Promise.allSettled()`
-- `scoring-factors.ts` — Pure scoring functions: infrastructure, stage, cluster, contractor, transport, price, municipal
+- `scoring.ts` — Orchestrates 7-factor weighted scoring (0-100, grade A-F) via `Promise.allSettled()`. Drops unknown factors and redistributes weights.
+- `scoring-factors.ts` — Pure scoring functions: שירותי שכונה, שלב תכנוני (with time decay), מומנטום עירוני, יזם/קבלן, תחבורה ציבורית, מחיר (Madlan only), תמיכת רשות
 - `address.ts` — Address-level search (7 sources in parallel: PB, XPLAN, construction progress, active sites, green buildings, dev costs, lotteries)
 - `developer.ts` — Developer research (gov registry + active sites + Firecrawl web search for reviews/reputation)
 - `madlan-area.ts` — Madlan GraphQL: neighborhood/area insights (demographics, prices, trends)
@@ -38,7 +38,7 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - **Source metadata**: Extracted from DB columns (`source_dataset`, `resource_id`, `fetched_at`, `data_gov_url`)
 - **Search types**: ILIKE for general text, `%` operator (pg_trgm) for name fuzzy matching, exact match for codes (gush)
 - **Field mapping**: Snake_case DB fields manually mapped to camelCase in each tool's execute function
-- **Scoring**: `Promise.allSettled()` for parallel data gathering — partial failures return neutral scores, not errors
+- **Scoring**: `Promise.allSettled()` for parallel data gathering — factors with missing data are DROPPED (score: null), weights redistributed among remaining factors. No fallback scores.
 
 ## Gotchas
 
