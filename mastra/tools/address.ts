@@ -27,9 +27,11 @@ function settled<T>(
   return result.status === "fulfilled" ? result.value : null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RawQueryResult = {
-  records: Record<string, unknown>[];
-  source?: SourceInfo;
+  records: any[];
+  total: number;
+  source: SourceInfo | null;
 } | null;
 
 type ProjectData = {
