@@ -7,8 +7,7 @@ import { getSession } from "@/lib/auth";
 import { getPostHogClient } from "@/lib/posthog-server";
 import { checkRateLimit } from "@/app/lib/rate-limit";
 
-const CHAT_MAX_DURATION_SECONDS = 120;
-export const maxDuration = CHAT_MAX_DURATION_SECONDS;
+export const maxDuration = 120; // seconds — max streaming duration
 
 export async function POST(req: Request) {
   const session = await getSession();
