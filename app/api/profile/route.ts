@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
-import { neon } from "@neondatabase/serverless"
+import { neon, NeonQueryFunction } from "@neondatabase/serverless"
 import { getSession } from "@/lib/auth"
+
+type Sql = NeonQueryFunction<false, false>
 
 const ALLOWED_FIELDS = new Set([
   "investorType",
@@ -12,6 +14,47 @@ const ALLOWED_FIELDS = new Set([
   "responseStyle",
   "customInstructions",
 ])
+
+async function updateField({
+  sql,
+  field,
+  value,
+  userId,
+  now,
+}: {
+  sql: Sql
+  field: string
+  value: string | null
+  userId: string
+  now: Date
+}): Promise<void> {
+  switch (field) {
+    case "investorType":
+      await sql`UPDATE user_preferences SET "investorType" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+    case "investmentHorizon":
+      await sql`UPDATE user_preferences SET "investmentHorizon" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+    case "riskTolerance":
+      await sql`UPDATE user_preferences SET "riskTolerance" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+    case "budgetRange":
+      await sql`UPDATE user_preferences SET "budgetRange" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+    case "experienceLevel":
+      await sql`UPDATE user_preferences SET "experienceLevel" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+    case "areasOfInterest":
+      await sql`UPDATE user_preferences SET "areasOfInterest" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+    case "responseStyle":
+      await sql`UPDATE user_preferences SET "responseStyle" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+    case "customInstructions":
+      await sql`UPDATE user_preferences SET "customInstructions" = ${value}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
+      break
+  }
+}
 
 export async function GET() {
   const session = await getSession()
@@ -57,24 +100,7 @@ export async function PATCH(req: Request) {
   `
 
   // Update the specific field
-  const v = value ?? null
-  if (field === "investorType") {
-    await sql`UPDATE user_preferences SET "investorType" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  } else if (field === "investmentHorizon") {
-    await sql`UPDATE user_preferences SET "investmentHorizon" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  } else if (field === "riskTolerance") {
-    await sql`UPDATE user_preferences SET "riskTolerance" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  } else if (field === "budgetRange") {
-    await sql`UPDATE user_preferences SET "budgetRange" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  } else if (field === "experienceLevel") {
-    await sql`UPDATE user_preferences SET "experienceLevel" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  } else if (field === "areasOfInterest") {
-    await sql`UPDATE user_preferences SET "areasOfInterest" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  } else if (field === "responseStyle") {
-    await sql`UPDATE user_preferences SET "responseStyle" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  } else if (field === "customInstructions") {
-    await sql`UPDATE user_preferences SET "customInstructions" = ${v}, "updatedAt" = ${now} WHERE "userId" = ${userId}`
-  }
+  await updateField({ sql, field, value: value ?? null, userId, now })
 
   const rows = await sql`
     SELECT "investorType", "investmentHorizon", "riskTolerance",

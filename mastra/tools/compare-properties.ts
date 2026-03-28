@@ -155,8 +155,10 @@ export const compareProperties = createTool({
 
     const results = await Promise.allSettled(
       addresses.map(async (addr) => {
-        const rawResult = await searchByAddress.execute!(addr, { agent: {} } as never);
-        const searchResult = rawResult as unknown as SearchAddressResult & Record<string, unknown>;
+        const searchResult = (await searchByAddress.execute!(
+          addr,
+          { agent: {} } as never,
+        )) as SearchAddressResult & Record<string, unknown>;
 
         const pb = searchResult.pinuiBinui.projects[0] as Record<string, unknown> | undefined;
         const dev = searchResult.detectedDeveloper.developers[0] as
@@ -165,7 +167,7 @@ export const compareProperties = createTool({
 
         let scoreResult: ScoreResult | null = null;
         try {
-          const rawScore = await scoreProject.execute!(
+          scoreResult = (await scoreProject.execute!(
             {
               city: addr.city,
               neighborhood: (pb?.neighborhood as string) ?? undefined,
@@ -173,8 +175,7 @@ export const compareProperties = createTool({
               projectStatus: (pb?.status as string) ?? undefined,
             },
             { agent: {} } as never,
-          );
-          scoreResult = rawScore as unknown as ScoreResult;
+          )) as ScoreResult;
         } catch {
           console.error(`[compareProperties] scoreProject failed for ${addr.street}`);
         }
