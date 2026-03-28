@@ -38,24 +38,28 @@ pnpm storybook:build # Build static Storybook
 │   ├── api/chat/        # Chat API route (POST stream, GET history, rate-limited)
 │   ├── api/auth/        # Better Auth catch-all handler
 │   ├── api/early-access/ # Early access signup (rate-limited)
+│   ├── api/profile/     # GET/PATCH investor profile preferences
 │   ├── app/             # Authenticated chat app route (/app)
 │   │   └── page.tsx     # → Assistant component
 │   ├── lib/             # DB client, Drizzle schema, CKAN constants, market data client, rate-limit
+│   ├── terms/, privacy/ # Legal pages (Terms of Service, Privacy Policy)
 │   ├── login/, signup/  # Auth pages
 │   ├── assistant.tsx    # Main chat UI (client component)
 │   └── page.tsx         # Landing page (public)
 ├── mastra/
-│   ├── agents/          # Agent definition (system prompt, model, tools)
-│   ├── tools/           # 22 Mastra tool files (query, scoring, market data, address, HITL)
+│   ├── agents/          # Agent definition + instructions (prompt extracted to dirot-instructions.ts)
+│   ├── tools/           # Mastra tool files (query, scoring, market data, address, profile, HITL)
+│   │   └── queries/     # Domain-specific DB query modules (split from db-queries.ts)
 │   └── index.ts         # Mastra instance (storage, observability)
 ├── components/
 │   ├── assistant-ui/    # Thread, sidebar, markdown components
 │   ├── auth/            # Login/signup forms
 │   ├── landing/         # Landing page sections (hero, chat-demo, CTA, etc.)
+│   ├── profile/         # Investor profile sidebar panel (editable fields, tone, custom instructions)
 │   ├── tools/           # Tool UI components (score-card, comparison-table, HITL tools)
 │   └── ui/              # shadcn/ui primitives
 ├── lib/                 # Auth config, PostHog server, email (Resend)
-├── hooks/               # Custom React hooks (use-latest-todos, use-mobile)
+├── hooks/               # Custom React hooks (use-profile, use-latest-todos, use-mobile)
 ├── scripts/             # DB init, CKAN sync, statistical areas sync, verification
 ├── data/                # Static reference data, stubs
 ├── tools/neon-mcp-slim/ # Slim Neon MCP server for DB access

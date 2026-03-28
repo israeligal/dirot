@@ -4,7 +4,15 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 
 ## Files
 
-- `db-queries.ts` — Shared DB query functions (Neon PostgreSQL, pg_trgm fuzzy search, source metadata extraction)
+- `db-queries.ts` — Barrel re-export from `queries/` (see below for domain files)
+- `queries/shared.ts` — getSql(), formatResult(), extractSource() DB helpers
+- `queries/urban-renewal.ts` — queryUrbanRenewal(), queryUrbanRenewalByAddress()
+- `queries/construction.ts` — queryConstructionSites(), queryConstructionProgress(), queryConstructionSitesByAddress(), queryGreenBuildingsByAddress(), queryDevelopmentCostsByAddress()
+- `queries/lottery.ts` — queryLotteries(), queryLotteriesByAddress()
+- `queries/contractors.ts` — queryContractors()
+- `queries/infrastructure.ts` — queryInfrastructure()
+- `queries/professionals.ts` — queryBrokers(), queryAppraisers()
+- `queries/public-housing.ts` — queryPublicHousing()
 - `utils.ts` — Helpers: `trimRecord()`, `formatGovMapUrl()`, `parseStringNumber()`
 - `xplan-queries.ts` — ArcGIS REST API client for Israeli Planning Authority (XPLAN)
 - `pinui-binui.ts` — Urban renewal projects search by city/neighborhood
@@ -14,8 +22,10 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - `professionals.ts` — Contractors (pg_trgm fuzzy) + brokers/appraisers (exports 2 tools)
 - `public-housing.ts` — Public housing inventory and vacancies
 - `xplan.ts` — Planning authority plans at location (commercial, parks, schools, roads — not just PB)
-- `scoring.ts` — Orchestrates 7-factor weighted scoring (0-100, grade A-F) via `Promise.allSettled()`. Drops unknown factors and redistributes weights.
-- `scoring-factors.ts` — Pure scoring functions: שירותי שכונה, שלב תכנוני (with time decay), מומנטום עירוני, יזם/קבלן, תחבורה ציבורית, מחיר (market data only), תמיכת רשות
+- `scoring.ts` — Mastra tool definition (thin wrapper calling scoring-engine)
+- `scoring-engine.ts` — Orchestrates 7-factor scoring: gatherScoringData(), computeFactors(), redistributeWeights()
+- `scoring-factors.ts` — Pure scoring functions: שירותי שכונה, שלב תכנוני (with time decay), מומנטום עירוני, יזם/קבלן, תחבורה ציבורית, מחיר, תמיכת רשות
+- `scoring-constants.ts` — STAGE_WEIGHT_PROFILES, STATUS_SCORE_MAP, TIME_DECAY_BRACKETS, StageProfile, FactorWeights types
 - `address.ts` — Address-level search (7 sources in parallel: PB, XPLAN, construction progress, active sites, green buildings, dev costs, lotteries)
 - `developer.ts` — Developer research (gov registry + active sites + Firecrawl web search for reviews/reputation)
 - `madlan-area.ts` — Market data: neighborhood/area insights (demographics, prices, trends)
@@ -25,6 +35,7 @@ Mastra tool definitions for the Dirot agent: DB query tools, XPLAN API, scoring 
 - `nearby-transit.ts` — Bus stops + LRT stations within bounding box (from `bus_stops`, `lrt_stations` tables)
 - `neighborhood-lookup.ts` — Statistical area lookup by coordinates (from `statistical_areas` table)
 - `saved-properties.ts` — Save/list/remove properties per user (3 tools, uses context.agent.resourceId for user ID)
+- `profile.ts` — getProfile + updateProfile tools (user investor preferences, uses context.agent.resourceId)
 - `compare-properties.ts` — Compare 2-4 addresses side by side (parallel searchByAddress + scoreProject, renders as HITL card)
 - `update-todos-tool.ts` — HITL: stateful task list management (searches message history for previous state)
 - `ask-for-plan-approval-tool.ts` — HITL: request user approval (no execute fn — framework-handled)

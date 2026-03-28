@@ -5,8 +5,8 @@ assistant-ui React components for the conversation interface. All user-facing te
 ## Files
 
 - `thread.tsx` — Main conversation UI: messages, composer, welcome state, branch picker, action bars (390 lines, largest component)
-- `thread-list.tsx` — Sidebar thread list with new/archive actions
-- `threadlist-sidebar.tsx` — Wrapper placing ThreadList inside a Sidebar (right-positioned for RTL)
+- `thread-list.tsx` — Thread list component (currently unused — replaced by ProfileSidebar in `components/profile/`)
+- `threadlist-sidebar.tsx` — Thread list sidebar wrapper (currently unused — replaced by ProfileSidebar)
 - `markdown-text.tsx` — Markdown renderer with syntax highlighting, uses `unstable_memoizeMarkdownComponents`
 - `attachment.tsx` — File/image attachment handling for composer and messages (File objects + data URLs)
 - `tool-fallback.tsx` — Generic collapsible display for tool calls without custom UI
@@ -18,7 +18,7 @@ assistant-ui React components for the conversation interface. All user-facing te
 - **CSS prefix**: All components use `aui-*` class names for styling/querying
 - **Animations**: `motion/react` with `LazyMotion` + `domAnimation` in thread.tsx
 - **Layout**: Thread max-width `44rem` via CSS variable `--thread-max-width`; user messages use CSS Grid
-- **RTL**: Sidebar positioned "right"; uses `ms`/`pe` utility classes instead of `ml`/`pr`
+- **RTL**: Uses `ms`/`pe` utility classes instead of `ml`/`pr`; sidebar replaced by `components/profile/profile-sidebar.tsx`
 - **Container queries**: `@container` / `@md` for responsive layouts within components
 
 ## Gotchas
