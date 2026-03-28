@@ -7,7 +7,8 @@ import { getSession } from "@/lib/auth";
 import { getPostHogClient } from "@/lib/posthog-server";
 import { checkRateLimit } from "@/app/lib/rate-limit";
 
-export const maxDuration = 120;
+const CHAT_MAX_DURATION_SECONDS = 120;
+export const maxDuration = CHAT_MAX_DURATION_SECONDS;
 
 export async function POST(req: Request) {
   const session = await getSession();
@@ -71,8 +72,8 @@ export async function GET() {
       threadId,
       resourceId,
     });
-  } catch {
-    console.log("No previous messages found.");
+  } catch (err) {
+    console.error("[chat] Failed to recall messages:", err);
   }
 
   const uiMessages = toAISdkV5Messages(response?.messages || []);

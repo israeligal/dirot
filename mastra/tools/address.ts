@@ -21,6 +21,8 @@ const sourcesSchema = z.array(
   }),
 );
 
+const ADDRESS_SEARCH_LIMIT = 10;
+
 function settled<T>(
   result: PromiseSettledResult<T>,
 ): T | null {
@@ -301,13 +303,13 @@ export const searchByAddress = createTool({
 
     const [pbResult, xplanResult, constructionProgressResult, activeSitesResult, greenResult, devCostsResult, lotteryResult] =
       await Promise.allSettled([
-        queryUrbanRenewalByAddress({ city, searchTerm, limit: 10 }),
-        queryXplan({ city, keyword: searchTerm, limit: 10 }),
-        queryConstructionProgress({ city, siteName: street, limit: 10 }),
-        queryConstructionSitesByAddress({ city, siteName: street, limit: 10 }),
-        queryGreenBuildingsByAddress({ city, street, limit: 10 }),
-        queryDevelopmentCostsByAddress({ city, siteName: searchTerm, limit: 10 }),
-        queryLotteriesByAddress({ city, searchTerm, limit: 10 }),
+        queryUrbanRenewalByAddress({ city, searchTerm, limit: ADDRESS_SEARCH_LIMIT }),
+        queryXplan({ city, keyword: searchTerm, limit: ADDRESS_SEARCH_LIMIT }),
+        queryConstructionProgress({ city, siteName: street, limit: ADDRESS_SEARCH_LIMIT }),
+        queryConstructionSitesByAddress({ city, siteName: street, limit: ADDRESS_SEARCH_LIMIT }),
+        queryGreenBuildingsByAddress({ city, street, limit: ADDRESS_SEARCH_LIMIT }),
+        queryDevelopmentCostsByAddress({ city, siteName: searchTerm, limit: ADDRESS_SEARCH_LIMIT }),
+        queryLotteriesByAddress({ city, searchTerm, limit: ADDRESS_SEARCH_LIMIT }),
       ]);
 
     const { pbProjects, plans, progressBuildings, sites, greenBuilds, devProjects, lotteries, sources } =

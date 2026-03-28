@@ -27,15 +27,25 @@ const outputSchema = z.object({
   todos: z.array(todoSchema),
 });
 
+interface MessageContent {
+  type?: unknown;
+  toolName?: unknown;
+  output?: { value?: unknown };
+}
+
+interface AgentMessage {
+  content?: unknown;
+}
+
 // Helper functions for cleaner code
-const findPreviousTodos = (messages: any[] | undefined): Todo[] => {
+const findPreviousTodos = (messages: unknown[] | undefined): Todo[] => {
   if (!messages || !Array.isArray(messages)) {
     return [];
   }
 
   // Traverse messages in reverse to find the most recent updateTodos output
   for (let i = messages.length - 1; i >= 0; i--) {
-    const todos = extractTodosFromMessage(messages[i]);
+    const todos = extractTodosFromMessage(messages[i] as AgentMessage);
     if (todos.length > 0) {
       return todos;
     }
@@ -44,15 +54,15 @@ const findPreviousTodos = (messages: any[] | undefined): Todo[] => {
   return [];
 };
 
-const extractTodosFromMessage = (message: any): Todo[] => {
+const extractTodosFromMessage = (message: AgentMessage): Todo[] => {
   if (!message?.content || !Array.isArray(message.content)) {
     return [];
   }
 
-  for (const content of message.content) {
+  for (const content of message.content as MessageContent[]) {
     if (isUpdateTodosResult(content)) {
       try {
-        const result = outputSchema.parse(content.output.value);
+        const result = outputSchema.parse(content.output?.value);
         if (result.todos && Array.isArray(result.todos)) {
           return result.todos;
         }
@@ -66,7 +76,7 @@ const extractTodosFromMessage = (message: any): Todo[] => {
   return [];
 };
 
-const isUpdateTodosResult = (content: any): boolean => {
+const isUpdateTodosResult = (content: MessageContent): boolean => {
   return (
     content?.type === "tool-result" &&
     (content?.toolName === "updateTodosTool" ||
@@ -136,7 +146,7 @@ const updateTodoStatuses = (
   }
 };
 
-const isValidIndex = (index: number, array: any[]): boolean => {
+const isValidIndex = (index: number, array: unknown[]): boolean => {
   return index >= 0 && index < array.length;
 };
 

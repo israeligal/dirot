@@ -236,6 +236,8 @@ function extractScoringInputs({
   }
 }
 
+const LRT_PROXIMITY_RADIUS_METERS = 3000
+
 function buildNearbyLrtStations({
   allLrtStations,
   cityLat,
@@ -250,12 +252,11 @@ function buildNearbyLrtStations({
   // WGS84 → approximate ITM: x ≈ (lng - 34.0) * 95000 + 170000, y ≈ (lat - 29.5) * 111000
   const cityItmX = (cityLng - 34.0) * 95000 + 170000
   const cityItmY = (cityLat - 29.5) * 111000
-  const radius = 3000 // 3km in meters
 
   return allLrtStations.filter((s) => {
     const dx = Number(s.x) - cityItmX
     const dy = Number(s.y) - cityItmY
-    return Math.sqrt(dx * dx + dy * dy) <= radius
+    return Math.sqrt(dx * dx + dy * dy) <= LRT_PROXIMITY_RADIUS_METERS
   })
 }
 
